@@ -17,7 +17,7 @@ import re
 #logging.info('So should this')
 #logging.warning('And this, too')
 
-######git test7 with key
+######git test8 with key signed commit
 
 
 class LivingDocs:
