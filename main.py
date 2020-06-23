@@ -62,7 +62,7 @@ sim = aux.Similarity(model)
 # compute averages, add to df.
 df = sim.add_average_vector(df)
 
-print(sim.find_similar_article(df, 9))
+print(sim.find_similar_article(df, 9, 5))
 print(df["Title"][9])
 print(df["Title"][2])
 
