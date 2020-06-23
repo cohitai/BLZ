@@ -106,11 +106,11 @@ class LivingDocs:
 
     def update_log_file(self, path=None):
 
-        """ log_file update by appending an existing csv log file from Livingdocs server.
+        """log_file's server update: appending an existing csv log file from Livingdocs server.
 
         --------
 
-        returns: n: the last publication event. """
+        returns: n: last known publication event. """
 
         if not path:
             path = self.log_file
