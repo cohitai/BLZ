@@ -102,10 +102,10 @@ class Similarity:
 
     def find_similar_article(self, df, n, k):
 
-        """function finds similar article;
+        """function finds k similar articles to an article with index n;
         Argument: integers n,k.
                   a data frame df
-        Returns : k integer indices similar with n."""
+        Returns : k integer indices similar to n."""
 
         list_distances = []
         for i in range(df.shape[0]):
