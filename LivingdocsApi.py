@@ -12,12 +12,15 @@ import csv
 from ast import literal_eval
 import re
 
+
+
+
 #logging.basicConfig(filename='example.log',level=logging.DEBUG)
 #logging.debug('This message should go to the log file')
 #logging.info('So should this')
 #logging.warning('And this, too')
 
-###### hello 23.6.20
+###### hello 23.6.20 15:50
 
 
 class LivingDocs:
