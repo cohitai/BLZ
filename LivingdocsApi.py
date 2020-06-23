@@ -52,6 +52,25 @@ class LivingDocs:
         if kwargs.get('output_path', None):
             self.output_path = kwargs.get('output_path', None)
 
+    def _retrieve_logs(self, pub_event_id):
+
+        """method to retrieve logs rows from the server
+        PARAM pub_event_id - an integer
+        RETURNS a list """
+
+        url = 'https://api.berliner-zeitung.de/api/v1/publicationEvents?after={1}&limit=1000&access_token={0}'.format(
+            self.api_key1, pub_event_id)
+        req = requests.get(url)
+        l = literal_eval(req.content.decode("UTF-8"))
+        items = []
+
+        for i in range(len(l)):
+            item = l[i]
+            items.append((item['id'], item['documentId'], item['documentType'], item['createdAt'], item['eventType'],
+                          item['projectId'], item['channelId'], item['publicationId'], item['contentType']))
+
+        return items
+
     def create_new_sources_file(self, file_name, pub_event_id=0, replace=True):
 
         """download log data from Livingsdocs"""
@@ -67,21 +86,11 @@ class LivingDocs:
             # start from the first item.
             # pub_event_id = 0
 
+            pause_counter = 0
+
             while True:
 
-                url = 'https://api.berliner-zeitung.de/api/v1/publicationEvents?after={1}&limit=1000&access_token={0}'.format(
-                    self.api_key1, pub_event_id)
-                req = requests.get(url)
-                ## page = BeautifulSoup(req.content)
-                l = literal_eval(req.content.decode("UTF-8"))
-                items = []
-                pause_counter = 1
-
-                for i in range(len(l)):
-                    item = l[i]
-                    items.append((item['id'], item['documentId'], item['documentType'], item['createdAt'],
-                                  item['eventType'], item['projectId'], item['channelId'], item['publicationId'],
-                                  item['contentType']))
+                items = self._retrieve_logs(pub_event_id)
 
                 for s in items:
                     csv_out.writerow(s)
@@ -91,9 +100,9 @@ class LivingDocs:
                     break
 
                 pause_counter += 1
-                pub_event_id = item["id"]
+                pub_event_id = items[-1][0]
 
-                if not pause_counter % 5:
+                if not pause_counter % 50:
                     time.sleep(30)
                     pause_counter = 0
 
@@ -101,16 +110,16 @@ class LivingDocs:
 
         if replace:
             self.log_file = path
-            print("log_file updated to:", self.log_file)
+            print("log_file written to:", self.log_file)
             print("last publication event:", pub_event_id)
 
     def update_log_file(self, path=None):
 
-        """log_file's server update: appending an existing csv log file from Livingdocs server.
+        """ log_file update by appending an existing csv log file from Livingdocs server.
 
         --------
 
-        returns: n: last known publication event. """
+        returns: n: the last publication event. """
 
         if not path:
             path = self.log_file
@@ -120,6 +129,7 @@ class LivingDocs:
             # the last id number of a retrieved row in the file.
 
             n = int(next(reversed(list(csv.reader(f))))[0])
+            print("Last id documented:", n)
 
         with open(path, 'a') as file:
 
@@ -128,20 +138,7 @@ class LivingDocs:
 
             while True:
 
-                url = 'https://api.berliner-zeitung.de/api/v1/publicationEvents?after={1}&limit=1000&access_token={0}'.format(
-                    self.api_key1, pub_event_id)
-                req = requests.get(url)
-                page = BeautifulSoup(req.content)
-                items = []
-
-                print(json.loads(page.find('p')))
-
-                for x in range(len(json.loads(page.find('p').getText()))):
-                    item = json.loads(page.find('p').getText())[x]
-                    items.append((item['id'], item['documentId'], item['documentType'], item['createdAt'],
-                                  item['eventType'], item['projectId'], item['channelId'], item['publicationId'],
-                                  item['contentType']))
-
+                items = self._retrieve_logs(pub_event_id)
                 pub_event_id += 1000
 
                 for s in items:
@@ -149,6 +146,12 @@ class LivingDocs:
 
                 if not items:
                     break
+
+        with open(path, 'r') as f:
+
+            n = int(next(reversed(list(csv.reader(f))))[0])
+            print("New last id documented:", n)
+
         return n
 
     def get_events(self, after=12000):
