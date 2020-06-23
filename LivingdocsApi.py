@@ -1,18 +1,15 @@
 import requests
-from bs4 import BeautifulSoup
 import logging
-logging.basicConfig(level=logging.DEBUG)
 import json
 import pandas as pd
 import time
-import os
 import glob
 from collections import deque
 import csv
 from ast import literal_eval
 import re
 
-
+logging.basicConfig(level=logging.DEBUG)
 
 
 #logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -55,8 +52,9 @@ class LivingDocs:
     def _retrieve_logs(self, pub_event_id):
 
         """method to retrieve logs rows from the server
-        PARAM pub_event_id - an integer
-        RETURNS a list """
+        PARAM -----------
+        pub_event_id: an integer
+        RETURNS a list"""
 
         url = 'https://api.berliner-zeitung.de/api/v1/publicationEvents?after={1}&limit=1000&access_token={0}'.format(
             self.api_key1, pub_event_id)
@@ -153,17 +151,6 @@ class LivingDocs:
             print("New last id documented:", n)
 
         return n
-
-    def get_events(self, after=12000):
-
-        """ get events greater than 'after'. """
-
-        url = 'https://api.berliner-zeitung.de/api/v1/publicationEvents?after={1}&limit=1000&access_token={0}'.format(
-            self.api_key1, after)
-        req = requests.get(url)
-        page = BeautifulSoup(req.content)
-
-        return json.loads(page.find('p').getText())
 
     def return_last_file(self, path=None):
 
@@ -314,7 +301,7 @@ class LivingDocs:
             except KeyError:
                 pass
 
-            if not (i) % 1000:
+            if not i % 1000:
                 label = int(df1["systemdata.documentId"].head(1))
                 df1.to_csv(self.source + "Livingsdoc_" + str(label) + ".csv", encoding='utf-8', index=False)
                 df1 = pd.DataFrame()
@@ -406,13 +393,13 @@ class LivingDocs:
                 except KeyError:
                     pass
 
-            label = int(df1["systemdata.documentId"].head(1))
+            # label = int(df1["systemdata.documentId"].head(1))
             df1.to_csv(dest, encoding='utf-8', index=False)
 
             if l:
                 df1 = pd.DataFrame()
                 next_docid = articles[0]
-                dest = self.target + "Livingsdocs_{0}.csv".format(next_docid)
+                dest = self.source + "Livingsdocs_{0}.csv".format(next_docid)
 
         ## updating old docs ##
 
