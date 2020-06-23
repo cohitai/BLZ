@@ -549,5 +549,3 @@ class LivingDocs:
                                        "metadata.title": "title", 'metadata.publishDate': "publishDate",
                                        'metadata.language.label': "language"}).to_csv(
                 self.target + "Livingsdocs" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
-
-
