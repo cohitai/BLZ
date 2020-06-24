@@ -200,11 +200,13 @@ class LivingDocs:
             return 0
 
     @staticmethod
-    def crop_query(df, id=0):
+    def crop_query(df, id=0, unpublish=False):
 
         """ function reduces df to documentType = "article" and crops it at "id" """
-
-        return df.query('documentType == "article" & id > {0} & eventType != "unpublish"'.format(id))
+        if not unpublish:
+            return df.query('documentType == "article" & id > {0} & eventType != "unpublish"'.format(id))
+        else:
+            return df.query('documentType == "article" & id > {0} & eventType == "unpublish"'.format(id))
 
     def extract_doc(self, DocId):
 
@@ -277,8 +279,10 @@ class LivingDocs:
 
         # generate a generator
         df = pd.read_csv(self.log_file)
-        articles = sorted(set(self.crop_query(df, Id_start)["documentId"]))
-        articles = (self.extract_doc(x) for x in articles)
+        all_articles = set(self.crop_query(df, Id_start)["documentId"])
+        deleted_articles = set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"])
+        effective_articles = sorted(all_articles - deleted_articles)
+        articles = (self.extract_doc(x) for x in effective_articles)
 
         i = 0
 
@@ -324,13 +328,14 @@ class LivingDocs:
             f.write(self.status_id)
 
     def update_server(self, update_eventid=None):
-        """"""
+
+        """a method to update the server"""
+
         if update_eventid:
             after = update_eventid
         else:
             after = self.update_log_file()
 
-            #
         print("updating database, id number = ", after)
         #
 
@@ -340,9 +345,12 @@ class LivingDocs:
         df_re = self.crop_query(df, after)
         df_re = df_re.drop_duplicates(subset='documentId', keep="last")
 
+        # find deleted articles
+
+        deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
+
         n = int(d["post"][-1:])
 
-        #
         print("last document in the database:", n)
         #
         mask = df_re['documentId'] > n
