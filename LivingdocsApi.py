@@ -424,8 +424,6 @@ class LivingDocs:
         #
         print("Updating old documents:")
         #
-
-
         l_do = df_do.tolist()
         i = 0
         d = self.create_files_database()
@@ -473,6 +471,11 @@ class LivingDocs:
 
         with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
             f.write(self.status_id)
+
+    # remove all unpublished files:
+        self._remove_deleted()
+
+
 
     @staticmethod
     def json_to_text(obj):
@@ -558,3 +561,22 @@ class LivingDocs:
                                        "metadata.title": "title", 'metadata.publishDate': "publishDate",
                                        'metadata.language.label': "language"}).to_csv(
                 self.target + "Livingsdocs" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
+
+    def _remove_deleted(self):
+
+        """method removes articles with if an unpublished event exists in log"""
+        deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
+        print(len(deleted_articles))
+        d = self.create_files_database()
+
+        cnt = 0
+        for i in range(len(deleted_articles)):
+            current_path = self.match_file_to_docid(d, deleted_articles[i])
+            print(deleted_articles[i], ":", current_path)
+            if current_path:
+                df = pd.read_csv(current_path)
+                if deleted_articles[i] in df["systemdata.documentId"].tolist():
+                    indexname = df[(df['systemdata.documentId'] == deleted_articles[i])].index
+                    df.drop(indexname, inplace=True)
+                    df.to_csv(current_path, index=False)
+                    print("a drop is made:", current_path)
