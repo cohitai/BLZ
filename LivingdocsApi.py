@@ -8,7 +8,10 @@ from collections import deque
 import csv
 from ast import literal_eval
 import re
-
+import sqlite3
+from sqlite3 import Error
+import sys
+csv.field_size_limit(sys.maxsize)
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -480,7 +483,8 @@ class LivingDocs:
     @staticmethod
     def json_to_text(obj):
 
-        """recieves a str (obj) in a json structure and returns a string. """
+        """recieves a str (obj) in a json structure ;
+        returns a string. """
 
         obj_l = literal_eval(obj)
         xx = list(filter(lambda x: x['component'] == 'lead-p' or x['component'] == 'p', obj_l))
@@ -499,7 +503,7 @@ class LivingDocs:
     @staticmethod
     def make_consistent_text(desc, text):
 
-        """add desc at the beginning of a text unless unnecessary."""
+        """adding desc at the beginning of a text unless unnecessary."""
 
         try:
             if len(desc) < 10:
@@ -562,6 +566,7 @@ class LivingDocs:
                                        'metadata.language.label': "language"}).to_csv(
                 self.target + "Livingsdocs" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
 
+    @staticmethod
     def _remove_deleted(self):
 
         """method removes articles with if an unpublished event exists in log"""
@@ -580,3 +585,124 @@ class LivingDocs:
                     df.drop(indexname, inplace=True)
                     df.to_csv(current_path, index=False)
                     print("a drop is made:", current_path)
+
+    @staticmethod
+    def _create_connection(path):
+        """create an SQL .db file"""
+
+        connection = None
+        try:
+            connection = sqlite3.connect(path)
+            print("Connection to SQLite DB successful")
+        except Error as e:
+            print(f"The error '{e}' occurred")
+
+        return connection
+
+    def _create_table(conn, create_table_sql):
+        """ create a table from the create_table_sql statement
+        :param conn: Connection object
+        :param create_table_sql: a CREATE TABLE statement
+        :return:
+        """
+        try:
+            c = conn.cursor()
+            c.execute(create_table_sql)
+        except Error as e:
+            print(e)
+
+    def sql_transform(self, file_name):
+        """
+        :param file_name : a string
+        :return: sql file
+        """
+        conn = create_connection(self.output_path+file_name)
+        with open(self.log_file, 'r') as csvfile:
+            csvreader = csv.reader(csvfile)
+            l = next(csvreader)
+            l.pop(5)
+            l.pop(5)
+
+        sql_create_Livingdocs_log_table = """ CREATE TABLE IF NOT EXISTS Livingdocs_log (
+                                                {0} integer PRIMARY KEY,
+                                                {1} integer,
+                                                {2} text,
+                                                {3} text,
+                                                {4} text,
+                                                {5} integer,
+                                                {6} text,
+                                                FOREIGN KEY ({1})
+                                                REFERENCES Livingdocs_articles ({1})
+                                            ); """.format(*l)
+
+        if conn is not None:
+
+            # create Livingdocs_log table
+            self._create_table(conn, sql_create_Livingdocs_log_table)
+
+        with open(self.log_file,'r') as fin:
+            # csv.DictReader uses first line in file for column headings by default
+            dr = csv.DictReader(fin) # comma is default delimiter
+            to_db = [(i['id'], i['documentId'], i['documentType'], i['createdAt'], i['eventType'], i['publicationId'], i['contentType']) for i in dr]
+
+        cur = conn.cursor()
+        cur.executemany("INSERT INTO Livingdocs_log (id,documentId,documentType,createdAt,eventType,publicationId,contentType) VALUES (?,?,?,?,?,?,?);", to_db)
+        conn.commit()
+
+        sorted_list = sorted(glob.glob(self.target+"*.csv"), key=lambda x: int(x.split('_')[-1][:-4]))
+
+        # putting header
+        with open(sorted_list[0]) as file:
+                csvreader = csv.reader(file)
+                l = next(csvreader)
+
+        sql_create_Livingdocs_articles_table = """ CREATE TABLE IF NOT EXISTS Livingdocs_articles (
+                                                {0} integer PRIMARY KEY,
+                                                {1} text,
+                                                {2} text,
+                                                {3} text,
+                                                {4} text,
+                                                {5} text,
+                                                {6} text,
+                                                {7} text
+                                            ); """.format(*l)
+
+        if conn is not None:
+            # create Livingdocs_articles table
+            self._create_table(conn, sql_create_Livingdocs_articles_table)
+
+        for file_path in sorted_list:
+            with open(file_path, 'r') as file:
+                dr = csv.DictReader(file) # comma is default delimiter
+                to_db = [(i['documentId'], i['section'], i['title'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
+                cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?);", to_db)
+                conn.commit()
+
+        conn.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
