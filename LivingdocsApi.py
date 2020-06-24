@@ -240,7 +240,10 @@ class LivingDocs:
 
         """function finds the file which contains DocId."""
 
-        return d.query('pre <= {0} & post >= {0}'.format(DocId))["file"].to_list()[0]
+        try:
+            return d.query('pre <= {0} & post >= {0}'.format(DocId))["file"].to_list()[0]
+        except IndexError:
+            return None
 
     def sizes_list(self, a, b):
 
@@ -336,10 +339,17 @@ class LivingDocs:
         else:
             after = self.update_log_file()
 
-        print("updating database, id number = ", after)
+        print("updating database, starting at DocId  = ", after)
+
         #
 
         d = self.create_files_database()
+
+        # exclude empty source directory case
+        if d.shape == (0, 0):
+            print("directory:", self.source, "is empty, consider using get_articles_from_server instead")
+            return
+        
         df = pd.read_csv(self.log_file)
 
         df_re = self.crop_query(df, after)
@@ -347,7 +357,7 @@ class LivingDocs:
 
         # find deleted articles
 
-        deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
+        deleted_articles = set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"])
 
         n = int(d["post"][-1:])
 
@@ -365,7 +375,7 @@ class LivingDocs:
         #
         print("updating new documents")
         #
-        articles = sorted(set(df_up))
+        articles = sorted(set(df_up) - deleted_articles)
 
         l = self.sizes_list(a=1000 - int(d["count"][-1:]), b=len(articles))
 
@@ -412,8 +422,9 @@ class LivingDocs:
         ## updating old docs ##
 
         #
-        print("updating old documents")
+        print("Updating old documents:")
         #
+
 
         l_do = df_do.tolist()
         i = 0
