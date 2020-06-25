@@ -35,6 +35,7 @@ class LivingDocs:
         self.log_file = None
         self.output_path = output_directory
         self.status_id = None
+        self.sql_path = None
 
     def initiate_paths(self, **kwargs):
 
@@ -678,7 +679,7 @@ class LivingDocs:
                 to_db = [(i['documentId'], i['section'], i['title'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
                 cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?);", to_db)
                 conn.commit()
-
+        self.sql_path = self.output_path+file_name
         conn.close()
 
 

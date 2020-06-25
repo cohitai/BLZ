@@ -4,6 +4,7 @@ import preprocessing as pp
 import train_word2vec as modeling
 import similarity_functions as aux
 import visualization as vis
+import LivingdocsApi as Liv
 
 """ 1. XML files reader. (Object)
     2. web scrapper, produce a data frame. (Object)
@@ -14,6 +15,20 @@ import visualization as vis
     ** 7. testing (clustering: knn, dbscan).  
     ** 8. n- grams analyser (tf- idf vectorizer)
     9. inserting weights due to occurrences before taking averages.  """
+
+
+#### creating database
+
+
+Li = Liv.LivingDocs()
+Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",source_path='/home/blz/Desktop/1/',target_path='/home/blz/Desktop/2/')
+Li.update_log_file()
+Li.get_articles_from_server()
+
+
+
+
+
 
 ### Converting files.
 
@@ -34,14 +49,13 @@ import visualization as vis
 
 # load an existing data frame.
 
-df = pp.load_data_frame()
+#df = pp.load_data_frame()
 
 ### Modeling.
 
 # create new model with parameters: embedding size, window size, min count, workers.
 
-
-model = modeling.CreateModel()
+#model = modeling.CreateModel()
 
 ####
 
@@ -49,26 +63,26 @@ model = modeling.CreateModel()
 
 # load a model from file.
 
-model = model.load_model("/home/blz/Desktop/output/models/word2vec5002054.model")
+#model = model.load_model("/home/blz/Desktop/output/models/word2vec5002054.model")
 
-print(model.wv.vocab.keys())
-print(model.wv.vectors.shape[0])
+#print(model.wv.vocab.keys())
+#print(model.wv.vectors.shape[0])
 
 ### Similarity
 
 # instantiate similarity object from an existing model.
-sim = aux.Similarity(model)
+#sim = aux.Similarity(model)
 
 # compute averages, add to df.
-df = sim.add_average_vector(df)
+#df = sim.add_average_vector(df)
 
-print(sim.find_similar_article(df, 9, 5))
-print(df["Title"][9])
-print(df["Title"][2])
+#print(sim.find_similar_article(df, 9, 5))
+#print(df["Title"][9])
+#print(df["Title"][2])
 
 ### Visualization
 
-visualizer = vis.Visualization(model)
+#visualizer = vis.Visualization(model)
 
 #1
 #visualizer.plot_pca()
