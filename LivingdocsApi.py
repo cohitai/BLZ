@@ -564,7 +564,7 @@ class LivingDocs:
             df[header].rename(columns={"systemdata.documentId": "documentId", "metadata.category.path": "section",
                                        "metadata.title": "title", 'metadata.publishDate': "publishDate",
                                        'metadata.language.label': "language"}).to_csv(
-                self.target + "Livingsdocs" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
+                self.target + "Livingsdocs" + "_" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
 
     @staticmethod
     def _remove_deleted(self):
@@ -599,6 +599,7 @@ class LivingDocs:
 
         return connection
 
+    @staticmethod
     def _create_table(conn, create_table_sql):
         """ create a table from the create_table_sql statement
         :param conn: Connection object
@@ -616,7 +617,7 @@ class LivingDocs:
         :param file_name : a string
         :return: sql file
         """
-        conn = create_connection(self.output_path+file_name)
+        conn = self._create_connection(self.output_path+file_name)
         with open(self.log_file, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             l = next(csvreader)
