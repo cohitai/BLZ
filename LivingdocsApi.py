@@ -567,7 +567,6 @@ class LivingDocs:
                                        'metadata.language.label': "language"}).to_csv(
                 self.target + "Livingsdocs" + "_" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
 
-    @staticmethod
     def _remove_deleted(self):
 
         """method removes articles with if an unpublished event exists in log"""

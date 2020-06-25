@@ -21,13 +21,12 @@ import LivingdocsApi as Liv
 
 
 Li = Liv.LivingDocs()
-Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",source_path='/home/blz/Desktop/1/',target_path='/home/blz/Desktop/2/')
-Li.update_log_file()
-Li.get_articles_from_server()
-
-
-
-
+Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
+#Li.update_log_file()
+#Li.get_articles_from_server()
+#Li.update_server()
+#Li.transform()
+#Li.sql_transform("sqldatabase.db")
 
 
 ### Converting files.
@@ -111,8 +110,6 @@ Li.get_articles_from_server()
 
 ### clustering algorithms
 #print(model)
-
-
 
 
 
