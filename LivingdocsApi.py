@@ -382,7 +382,6 @@ class LivingDocs:
         articles = sorted(set(df_up) - deleted_articles)
 
         l = self.sizes_list(a=1000 - int(d["count"][-1:]), b=len(articles))
-
         dest = self.return_last_file(self.source + "*.csv")
         df1 = pd.read_csv(dest)
 

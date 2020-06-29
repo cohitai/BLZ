@@ -73,13 +73,10 @@ def clean_text(path):
 
 def clean_text_from_text(text):
 
-    """function cleans text; receives text,
-       applies all cleaning functions which are defined
-       below and returns a cleaned text.
-
-       Argument: a string: (text)
-       Returns: a list of strings- a cleaned text.
-                                                    """
+    """function cleans text;
+       :param text, a string type ;
+       applies all cleaning functions defined below.
+       :return  a list of strings- a cleaned text."""
     _clean_text = []
 
     # All functions below are the basic operations which we use to clean the raw text.
