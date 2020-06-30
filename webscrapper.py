@@ -11,9 +11,9 @@ class web_scrapper:
     def _get_main_categories(self):
 
         """ method returns all url- links in URL as tupled list consists of topic and link.
-        Returns:
-        avg -- a list of tuples. each tuple has 2 arguments:
-                                        topic and an url link.
+        :returns
+        avg: tuples list. Each tuple has 2 arguments:
+                          (topic, url link).
         """
         page = requests.get(self.URL)
         topic_list = []
@@ -32,7 +32,7 @@ class web_scrapper:
         links) of the main URL and returns all available article in URL.
         Argument: list of tuples.
 
-        Returns: a list, all url links of articles available online at URL.
+        :returns a list, all url links of articles available online at URL.
         """
 
         link_list = []
@@ -44,7 +44,7 @@ class web_scrapper:
                 string = link.get('href')
 
                 """here it is being checked whether 
-                                            the link in soup has the correct form
+                   the link in soup has the correct form.
                 """
 
                 if string.startswith(item[0]) and string[-1].isdigit():
@@ -54,7 +54,7 @@ class web_scrapper:
         return URL_list
 
     @staticmethod
-    def create_database(URL_list):
+    def _create_database(URL_list):
 
         """function receives a list of urls
         and return a pd database.
@@ -85,18 +85,6 @@ class web_scrapper:
 
         return pd.DataFrame(DB, columns=['Date', 'Author', 'Title', 'Text', 'Url', 'Section'])
 
-    def update_database(self, df1, URL_list):
-
-        """ function receives a data frame and
-                        a urls list and updates the data frame by new article entries.
-        Arguments: a data frame ; a list of web links.
-        Return: data frame.
-        """
-
-        df2 = create_database(URL_list)
-        df = pd.concat([df1, df2]).drop_duplicates().reset_index(drop=True)
-        return df
-
     def create_df(self):
         URL_list = self._get_all_links(self._get_main_categories())
-        return self.create_database(URL_list)
+        return self._create_database(URL_list)
