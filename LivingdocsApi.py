@@ -11,6 +11,7 @@ import re
 import sqlite3
 from sqlite3 import Error
 import sys
+import os
 csv.field_size_limit(sys.maxsize)
 logging.basicConfig(level=logging.DEBUG)
 
@@ -120,11 +121,13 @@ class LivingDocs:
         """ log_file update by appending an existing csv log file from Livingdocs server.
 
         --------
-
-        returns: n: the last publication event. """
+        :param: path to log_file.
+        :returns: the last publication event documented at path. """
 
         if not path:
             path = self.log_file
+
+        print("log file is updated at:", path)
 
         with open(path, 'r') as f:
 
@@ -151,8 +154,7 @@ class LivingDocs:
 
         with open(path, 'r') as f:
 
-            n = int(next(reversed(list(csv.reader(f))))[0])
-            print("New last id documented:", n)
+            print("new last id documented:", int(next(reversed(list(csv.reader(f))))[0]))
 
         return n
 
@@ -240,27 +242,28 @@ class LivingDocs:
         return pd.DataFrame(d)
 
     @staticmethod
-    def match_file_to_docid(d, DocId):
+    def match_file_to_docid(d, doc_id):
 
-        """function finds the file which contains DocId."""
+        """function locates the file that contains doc_id.
+        :param d: a DataFrame describing csv files.
+                doc_id: integer id of a document.
+        :returns path of the csv file in the database which contains doc_id."""
 
         try:
-            return d.query('pre <= {0} & post >= {0}'.format(DocId))["file"].to_list()[0]
+            return d.query('pre <= {0} & post >= {0}'.format(doc_id))["file"].to_list()[0]
         except IndexError:
             return None
 
     def sizes_list(self, a, b):
 
-        """help function to create a split.
-
-           PARAM: a - recent file available capacity (int).
+        """helper function to create a split.
+           :param: a - recent file available capacity (int).
                   b - length of all articles to be stored in the current update (int).
 
-           RETURNS: list 'l' with integers.
+           :returns:  list 'l' with integers.
 
-           len(l) = number of files needed for the update.
-           its elements are the number of articles to be stored in each file.
-        """
+           len(l) = number of files needed for the update:
+           its elements are the number of articles to be stored in each file."""
 
         a = self.relu(a)
         l = []
@@ -277,7 +280,7 @@ class LivingDocs:
 
         return l
 
-    def get_articles_from_server(self, Id_start=0):
+    def get_articles_from_server(self, id_start=0):
 
         """function extracts articles information from server and
            saves them as csv files in self.source """
@@ -286,13 +289,12 @@ class LivingDocs:
 
         # generate a generator
         df = pd.read_csv(self.log_file)
-        all_articles = set(self.crop_query(df, Id_start)["documentId"])
+        all_articles = set(self.crop_query(df, id_start)["documentId"])
         deleted_articles = set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"])
         effective_articles = sorted(all_articles - deleted_articles)
         articles = (self.extract_doc(x) for x in effective_articles)
 
         i = 0
-
         for i, item in enumerate(articles):
             i += 1
 
@@ -590,9 +592,11 @@ class LivingDocs:
         """create an SQL .db file"""
 
         connection = None
+
         try:
             connection = sqlite3.connect(path)
             print("Connection to SQLite DB successful")
+            print("SQL database was created at:", path)
         except Error as e:
             print(f"The error '{e}' occurred")
 
@@ -613,10 +617,18 @@ class LivingDocs:
 
     def sql_transform(self, file_name):
         """
+        method to transform csv files into one SQL database
         :param file_name : a string
         :return: sql file
         """
-        conn = self._create_connection(self.output_path+file_name)
+        path = self.output_path+file_name
+
+        # overwrite an existing file
+        if os.path.exists(path):
+            os.remove(path)
+            print("file at: ", path, "already exists! deleting file...")
+
+        conn = self._create_connection(path)
         with open(self.log_file, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
             l = next(csvreader)
