@@ -3,21 +3,20 @@ from sqlite3 import Error
 import csv
 import glob
 import pandas as pd
-csv.field_size_limit(sys.maxsize)
-
 import preprocessing as pp
 import nltk
-
 import webscrapper as Scrapper
 from gensim.models import Word2Vec
-# model parameters
-m,n,s,t = (500, 20, 5, 4)
-
+import sys
 import time
-import datetime
 import logging
+
+csv.field_size_limit(sys.maxsize)
+
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
+# model parameters
+# m,n,s,t = (500, 20, 5, 4)
 
 class W2V:
 
