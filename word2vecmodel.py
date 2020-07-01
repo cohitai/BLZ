@@ -22,8 +22,9 @@ class W2V:
 
     """creates and trains w2v model from an sql db"""
 
-    def __init__(self, source, path_to_db):
-        self.source = source
+    def __init__(self, path_to_db):
+        # self.source = source
+
         self.path_to_db = path_to_db
         self.model = None
         self.model_name = None
@@ -72,7 +73,7 @@ class W2V:
                 "text"])) for i in cur.execute(query))
         return self._ext(sentences)
 
-    def fit(self,m ,n ,s ,t):
+    def fit(self, m, n, s, t):
 
         self.model = Word2Vec(size=m, window=n, min_count=s, workers=t)
         self.model_name = "model_" + time.strftime("%Y-%m-%d-%H:%M:%S", time.gmtime())
