@@ -29,6 +29,13 @@ class W2V:
         self.model_path = None
         self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
 
+    def load_model(self, model_path):
+
+        """method to load a trained model by its path."""
+
+        self.model = Word2Vec.load(model_path)
+        self.model_path = Word2Vec.load(model_path)
+
     @staticmethod
     def _get_header(cur):
 
@@ -158,3 +165,6 @@ class W2V:
             :returns: a dictionary """
 
             return dict(zip(header, list(tup)))
+
+
+

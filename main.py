@@ -12,63 +12,51 @@ import visualization as vis
     3. word2vecmodel. (Object)
     4. similarity. (Object)
     5. visualization. (Object)
-    6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. 
+    6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
-#### creating database
+# Converting files (obsolite).
+
+# XmlReader.XML_reader()
+
+#### LivingsdocsApi: creating database.
 
 Li = Liv.LivingDocs()
 Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
-Li.update_server()
+# Li.update_server()
 
 # Li.transform()
 # Li.sql_transform("sqldatabase.db")
 
-
-### Converting files.
-
-#XmlReader.XML_reader()
-
-### Web Scrapping.
+# Web Scrapping.
 
 #scrapper = Scrapper.WebScrapper()
 #df = scrapper.create_df(save=True)
 
-
-
-### Preprocessing.
-
 # load an existing web scrapping data frame.
-
 df = pp.load_data_frame()
 
-### Modeling.
+# Modeling (word2vecmodel)
 
 # create new model with parameters: embedding size, window size, min count, workers.
 
-#model = modeling.CreateModel()
+model = w2v.W2V("/home/blz/Desktop/output/sqldatabase.db")
 
-####
-
-#model = model.fit(500, 10, 5, 4)
+#model.fit(500, 20, 5, 4)
 
 # load a model from file.
 
-#model = model.load_model("/home/blz/Desktop/output/models/word2vec5002054.model")
+model.load_model("/home/blz/Desktop/output/models/model_2020-07-01-12:23:53.model")
 
-#print(model.wv.vocab.keys())
-#print(model.wv.vectors.shape[0])
+print(model.model.wv.vocab.keys())
+print(model.model.wv.vectors.shape[0])
 
-### Similarity
+# Similarity
 
 # instantiate similarity object from an existing model.
-#sim = aux.Similarity(model)
+# sim = aux.Similarity(model)
 
 # compute averages, add to df.
 #df = sim.add_average_vector(df)
-
-#print(sim.find_similar_article(df, 9, 5))
-#print(df["Title"][9])
-#print(df["Title"][2])
 
 ### Visualization
 
@@ -100,7 +88,3 @@ df = pp.load_data_frame()
 #la = ngrams.n_grams("/home/blz/Desktop/BLZ_Artikel_2/BLZ_20190514_H.txt")
 
 ### clustering algorithms
-#print(model)
-
-
-
