@@ -18,7 +18,7 @@ import visualization as vis
 
 # XmlReader.XML_reader()
 
-#### LivingsdocsApi: creating database.
+# LivingsdocsApi: creating database.
 
 Li = Liv.LivingDocs()
 Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
@@ -29,8 +29,8 @@ Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_
 
 # Web Scrapping.
 
-#scrapper = Scrapper.WebScrapper()
-#df = scrapper.create_df(save=True)
+# scrapper = Scrapper.WebScrapper()
+# df = scrapper.create_df(save=True)
 
 # load an existing web scrapping data frame.
 df = pp.load_data_frame()
@@ -41,50 +41,45 @@ df = pp.load_data_frame()
 
 model = w2v.W2V("/home/blz/Desktop/output/sqldatabase.db")
 
-#model.fit(500, 20, 5, 4)
+# model.fit(500, 20, 5, 4)
 
 # load a model from file.
 
 model.load_model("/home/blz/Desktop/output/models/model_2020-07-01-12:23:53.model")
 
-print(model.model.wv.vocab.keys())
-print(model.model.wv.vectors.shape[0])
+# print(model.model.wv.vocab.keys())
+# print(model.model.wv.vectors.shape[0])
 
 # Similarity
 
 # instantiate similarity object from an existing model.
-# sim = aux.Similarity(model)
+sim = aux.Similarity(model.model)
 
 # compute averages, add to df.
-#df = sim.add_average_vector(df)
+df = sim.add_average_vector(df)
 
-### Visualization
+print(sim.find_similar_article(df, 111, 5))
+print(df["Title"][111])
+print(df["Title"][103])
+print(df["Title"][105])
+print(df["Title"][118])
+print(df["Title"][119])
+print(df["Title"][31])
 
-#visualizer = vis.Visualization(model)
+# Visualization
 
-#1
+visualizer = vis.Visualization(model.model)
+# 1
 #visualizer.plot_pca()
-
-#2
+# 2
 #visualizer.plot_tsne()
-
-#3
+# 3
 #visualizer.plot_keys_cluster()
-
-#4
+# 4
 #visualizer.tsne_3d_plot()
-
-#5
+# 5
 #visualizer.plot_average_vectors(df)
-
-#6
+# 6
 #visualizer.plot_relative_clusters()
 
-
-#visualizer.plot_all_figures()
-
-### n-grams
-## create weights ??
-#la = ngrams.n_grams("/home/blz/Desktop/BLZ_Artikel_2/BLZ_20190514_H.txt")
-
-### clustering algorithms
+visualizer.plot_all_figures()

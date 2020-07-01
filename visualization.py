@@ -17,6 +17,9 @@ class Visualization:
     def __init__(self, model):
         self.model = model
         self.mat = model.wv.vectors
+    global output_path
+    output_path = "/home/blz/Desktop/output/"
+
 
     # 1
     def plot_pca(self, title="pca 2D"):
@@ -39,7 +42,7 @@ class Visualization:
         plt.axis('off')
         plt.scatter(xs, ys, marker='o')
         plt.title(title)
-        plt.savefig("fig1.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig1.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     # 2
@@ -55,7 +58,7 @@ class Visualization:
         plt.axis('off')
         plt.scatter(X_tsne[:, 0], X_tsne[:, 1], alpha=0.7)
         plt.title(title)
-        plt.savefig("fig2.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig2.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     # 3
@@ -100,7 +103,7 @@ class Visualization:
                              textcoords='offset points', ha='right', va='bottom', size=8)
         plt.legend(loc=4)
         plt.title(title)
-        plt.savefig("fig3.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig3.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     # 4
@@ -131,7 +134,7 @@ class Visualization:
         plt.scatter(embeddings[:, 0], embeddings[:, 1], embeddings[:, 2], c=colors, alpha=a, label=label)
         plt.legend(loc=4)
         plt.title(title)
-        plt.savefig("fig4.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig4.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     #5
@@ -189,7 +192,7 @@ class Visualization:
         plt.box(False)
         plt.axis('off')
         plt.grid(False)
-        plt.savefig("fig5.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig5.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     @staticmethod
@@ -268,7 +271,7 @@ class Visualization:
             plt.scatter(x, y, c=color, alpha=1, label=key)
         plt.legend(loc=4)
         plt.title(title)
-        plt.savefig("fig6.png", format='png', dpi=150, bbox_inches='tight')
+        plt.savefig(output_path+"fig6.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
     def _create_clusters_from_keys(self, keys):
@@ -290,14 +293,14 @@ class Visualization:
         return embedding_clusters, word_clusters
 
     def plot_all_figures(self):
-
+        print(output_path+'fig1.png')
         try:
-            img1 = mpimg.imread('fig1.png')
-            img2 = mpimg.imread('fig2.png')
-            img3 = mpimg.imread('fig3.png')
-            img4 = mpimg.imread('fig4.png')
-            img5 = mpimg.imread('fig5.png')
-            img6 = mpimg.imread('fig6.png')
+            img1 = mpimg.imread(output_path+'fig1.png')
+            img2 = mpimg.imread(output_path+'fig2.png')
+            img3 = mpimg.imread(output_path+'fig3.png')
+            #img4 = mpimg.imread(output_path+'fig4.png')
+            img5 = mpimg.imread(output_path+'fig5.png')
+            img6 = mpimg.imread(output_path+'fig6.png')
 
             plt.figure(1)
             plt.subplot(121)
@@ -318,12 +321,12 @@ class Visualization:
             plt.axis('off')
             plt.imshow(img3)
 
-            plt.subplot(122)
-            plt.box(False)
-            plt.axis('off')
-            plt.imshow(img4)
+            #plt.subplot(122)
+            #plt.box(False)
+            #plt.axis('off')
+            #plt.imshow(img4)
 
-            plt.show()
+            #plt.show()
 
             plt.figure(3)
             plt.subplot(121)
