@@ -1,32 +1,27 @@
 import XML_reader as XmlReader
 import webscrapper as Scrapper
 import preprocessing as pp
-import train_word2vec as modeling
+import LivingdocsApi as Liv
+import word2vecmodel as w2v
 import similarity_functions as aux
 import visualization as vis
-import LivingdocsApi as Liv
 
-""" 1. XML files reader. (Object)
-    2. web scrapper, produce a data frame. (Object)
-    3. preprocessing. (Module)
-    4. modeling. (Object)
-    5. similarity. (Object)
-    6. visualization. (Object)
-    ** 7. testing (clustering: knn, dbscan).  
-    ** 8. n- grams analyser (tf- idf vectorizer)
-    9. inserting weights due to occurrences before taking averages.  """
-
+""" 0. XML_reader. (Object) 
+    1. webscrapper. generating a data frame from blz website. (Object)
+    2. preprocessing. (Module)
+    3. word2vecmodel. (Object)
+    4. similarity. (Object)
+    5. visualization. (Object)
+    6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. 
 
 #### creating database
 
-
 Li = Liv.LivingDocs()
 Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
-#Li.update_server()
-#Li.update_log_file()
-#Li.get_articles_from_server()
-#Li.transform()
-#Li.sql_transform("sqldatabase.db")
+Li.update_server()
+
+# Li.transform()
+# Li.sql_transform("sqldatabase.db")
 
 
 ### Converting files.
