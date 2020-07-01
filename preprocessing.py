@@ -77,12 +77,12 @@ def clean_text_from_text(text):
        :param text, a string type ;
        applies all cleaning functions defined below.
        :return  a list of strings- a cleaned text."""
+
     _clean_text = []
 
     # All functions below are the basic operations which we use to clean the raw text.
 
     for line in text:
-
 
         token_sent = nltk.word_tokenize(line)
         token_sent = make_lower(token_sent)
@@ -97,8 +97,6 @@ def clean_text_from_text(text):
         token_sent = german_stemmer(token_sent)
         _clean_text.append(token_sent)
     return _clean_text
-
-
 
 
 def make_lower(tok_list):
@@ -132,7 +130,6 @@ def replace_hyphen_with_space(tok_list):
     l = []
     for w in temp:
         l += w.split(" ")
-
     return l
 
 
@@ -157,7 +154,7 @@ def remove_empty_words(tok_list):
     return [word for word in tok_list if word]
 
 
-bi_grams = ["new york","bundesrepublik deutschland", "baden württemberg", "samsung galaxy",
+bi_grams = ["new york", "bundesrepublik deutschland", "baden württemberg", "samsung galaxy",
             "geld sparen", "rheinland pfalz", "herzlichen dank", "wichtige information", "fußball wm",
             "social network", "prenzlauer berg", "humboldt universität", "wissenschaftlicher mitarbeiter"]
 
@@ -180,7 +177,7 @@ def bigrams_replacer(tok_list):
         if matched_indices:
             for ind in matched_indices[::-1]:
                 del tok_list[ind+1]
-                tok_list[ind] ="".join(item.split(" "))
+                tok_list[ind] = "".join(item.split(" "))
         return tok_list
 
 

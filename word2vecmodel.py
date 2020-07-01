@@ -1,8 +1,6 @@
 import sqlite3
-from sqlite3 import Error
 import csv
 import glob
-import pandas as pd
 import preprocessing as pp
 import nltk
 import webscrapper as Scrapper
@@ -18,8 +16,8 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 # model parameters
 # m,n,s,t = (500, 20, 5, 4)
 
-class W2V:
 
+class W2V:
     """creates and trains w2v model from an sql db"""
 
     def __init__(self, path_to_db):
@@ -73,11 +71,12 @@ class W2V:
                 "text"])) for i in cur.execute(query))
         return self._ext(sentences)
 
-    def fit(self, m, n, s, t):
+    def fit(self, m, n, s, t, epochs=3):
 
         self.model = Word2Vec(size=m, window=n, min_count=s, workers=t)
         self.model_name = "model_" + time.strftime("%Y-%m-%d-%H:%M:%S", time.gmtime())
         self.model_path = "/home/blz/Desktop/output/models/" + self.model_name + ".model"
+        self.epochs = epochs
 
         sql_query_1 = """SELECT * FROM Livingdocs_articles;"""
 
@@ -99,8 +98,8 @@ class W2V:
         cur = conn.cursor()
         header = self._fetch_header(cur)
 
-        cur.execute(sql_query_3a)
-        l3 = len(cur.fetchall())
+        # cur.execute(sql_query_3a)
+        # l3 = len(cur.fetchall())
 
         cur.execute(sql_query_4a)
         l4 = len(cur.fetchall())
@@ -108,32 +107,54 @@ class W2V:
         cur.execute(sql_query_5a)
         l5 = cur.fetchall()[0][0]
 
-        sent_ite_vocabulary = self._gen_sentences(header, cur, sql_query_3)
+        sent_ite_vocabulary = iter(self.SentIterator(header, cur, sql_query_3))
         self.model.build_vocab(sent_ite_vocabulary)
 
         # print(model.wv.vocab.keys())
         # print(model.wv.vectors.shape[0])
 
-        sent_ite_train = self._gen_sentences(header, cur, sql_query_4)
-        self.model.train(sent_ite_train, total_examples=l4, epochs=self.model.epochs)
+        for i in range(self.epochs):
+            sent_ite_train = iter(self.SentIterator(header, cur, sql_query_4))
+            self.model.train(sent_ite_train, total_examples=l4, epochs=1)
 
         #####
+        for i in range(self.epochs):
+            sent_ite_train = iter(self.SentIterator(header, cur, sql_query_5))
+            self.model.train(sent_ite_train, total_examples=l5, epochs=1)
 
-        sent_ite_train = self._gen_sentences(header, cur, sql_query_5)
-        self.model.train(sent_ite_train, total_examples=l5, epochs=self.model.epochs)
-
-
-        #### train directory of Digas
-
-        directory = "/home/blz/Desktop/BLZ_Artikel_2/"
+        # train directory of Digas
 
         for path in glob.glob(self.directory + "*.txt"):
             sentences = pp.clean_text(path)
-            self.model.train(sentences, total_examples=len(sentences), epochs=self.model.epochs)
+            self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
 
-        #### save
+        # save
 
         self.model.save(self.model_path)
 
         return self.model
 
+    class SentIterator:
+
+        """inner class to convert generator into an iterator object"""
+
+        def __init__(self, header, cur, query):
+            self.cur = cur
+            self.header = header
+            self.query = query
+            self.sentences = (pp.clean_text_from_text(nltk.sent_tokenize(
+                self._zip_results(header, i)["title"] + '. ' + self._zip_results(header, i)[
+                    "text"])) for i in cur.execute(query))
+
+        def __iter__(self):
+            for x in self.sentences:
+                for y in x:
+                    yield y
+
+        @staticmethod
+        def _zip_results(header, tup):
+
+            """method zips header with a tuple
+            :returns: a dictionary """
+
+            return dict(zip(header, list(tup)))
