@@ -4,6 +4,7 @@ from nltk.stem.snowball import GermanStemmer
 import re
 from datetime import datetime
 import pandas as pd
+from itertools import groupby
 
 # Global variable: stop words from a file.
 
@@ -15,7 +16,7 @@ with open(stop_words_path, 'r') as file:
 
 def edit_data_frame(df):
 
-    """function apply several feature manipulation on the data frame."""
+    """function applies several feature manipulations on the data frame."""
 
     # extracting Author name from string.
 
@@ -38,10 +39,7 @@ def edit_data_frame(df):
 
     df["Tokenized_sents"] = df["Full_text"].apply(nltk.sent_tokenize)
     df["Tokenized_sents"] = df["Tokenized_sents"].apply(clean_text_from_text)
-
-    # saving df as a csv file.
-
-    # df.to_csv("/home/itai/Desktop/output/df.csv")
+    df["DocId"] = df["Url"].apply(fetch_DocId)
 
     return df
 
@@ -203,5 +201,13 @@ def german_stemmer(tok_list):
     """function applies a German stemmer on a tokenized list."""
 
     return [GermanStemmer().stem(word) for word in tok_list]
+
+def fetch_DocId(url):
+
+    """function extracts DocId from url"""
+    try:
+        return [int(''.join(group)) for key, group in groupby(iterable=url, key=lambda e: e.isdigit()) if key][-1]
+    except IndexError:
+        return None
 
 

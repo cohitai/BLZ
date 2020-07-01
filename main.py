@@ -35,20 +35,16 @@ Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_
 
 ### Web Scrapping.
 
-#scrapper = Scrapper.web_scrapper()
-#df = scrapper.create_df()
+#scrapper = Scrapper.WebScrapper()
+#df = scrapper.create_df(save=True)
+
+
 
 ### Preprocessing.
 
-# apply cleaning operations on an existing data frame.
+# load an existing web scrapping data frame.
 
-#df = pp.edit_data_frame(df)
-
-#df.to_csv("/home/blz/Desktop/output/df.csv)
-
-# load an existing data frame.
-
-#df = pp.load_data_frame()
+df = pp.load_data_frame()
 
 ### Modeling.
 
