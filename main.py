@@ -15,76 +15,91 @@ import argparse
 
 def main():
 
-    parser = argparse.ArgumentParser(description="berliner zeitung recommendation engine")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-L", "--livingdocs", action="store_true")
-    group.add_argument("-B", "--scrap the website", action="store_true")
-    parser.add_argument("-train", help="train model")
-    parser.add_argument("-load", help="load model from file")
+    parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
+
+    parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
+
+    parser.add_argument("-B", "--BLZ", help="scrap the website", action="store_true")
+
+    parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
+
+    parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
+
+    parser.add_argument("-V", "--visualization", help="create visual report", action="store_true")
+
     args = parser.parse_args()
-    # LivingsdocsApi: creating database.
+
+    # LivingsdocsApi: creating database -L
 
     li = Liv.LivingDocs()
     li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",
-                      source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
+                      source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/',
+                      output_directory="/home/blz/Desktop/output/")
 
-    # Li.update_server()
-    # Li.transform()
-    # Li.sql_transform("sqldatabase.db")
+    if args.livingdocs:
+        li.update_server()
+        li.transform()
+        li.sql_transform("sqldatabase.db")
+    else:
+        li.sql_path = li.output_path+"sqldatabase.db"
 
-    # Web Scrapping.
+    # Web Scrapping -B
 
     blz_scrapper = scrapper.WebScrapper()
-    # df = scrapper.create_df(save=True)
-    # load an existing web scrapping data frame.
-    df = blz_scrapper.load_data_frame()
 
-    # Modeling (w2v model)
+    if args.livingdocs:
+        df = blz_scrapper.create_df(save=True)
 
-    model = w2v.W2V("/home/blz/Desktop/output/sqldatabase.db")
-    model.load_model("/home/blz/Desktop/output/models/model_2020-07-02-10:12:15.model")
+    else:
+        # load an existing web scrapping data frame.
+        df = blz_scrapper.load_data_frame()
 
-    # create new model with parameters: embedding size, window size, min count, workers.
-    # model.fit(500, 20, 5, 4)
+    # Modeling (w2v model) -M
+    model = w2v.W2V(li.sql_path)
 
+    # create a new model with parameters: embedding size, window size, min count, workers.
+    if args.fit:
+        model.fit(args.fit[0], args.fit[1], args.fit[2], args.fit[3])
+    else:
+        model.load_model("/home/blz/Desktop/output/models/model_2020-07-02-10:12:15.model")
     # print(model.model.wv.vocab.keys())
     # print(model.model.wv.vectors.shape[0])
 
-    # Similarity
-
+    # Similarity -P
     # instantiate similarity object from an existing model.
+    if args.predict:
+        sim = aux.Similarity(model.model, df)
+        sim.add_average_vector()
+        print(sim.predict(k=5))
 
-    sim = aux.Similarity(model.model, df)
-    sim.add_average_vector()
+    # Visualization -V
+    if args.visualization:
+        visualizer = vis.Visualization(model.model)
 
-    #print(sim.find_similar_article(111, 5))
-    #print(df["Title"][111])
-    #print(df["Title"][85])
-    #print(df["Title"][91])
-    #print(df["Title"][88])
-    #print(df["Title"][142])
-    #print(df["Title"][114])
+        # 1
+        # visualizer.plot_pca()
+        # 2
+        # visualizer.plot_tsne()
+        # 3
+        # visualizer.plot_keys_cluster()
+        # 4
+        # visualizer.tsne_3d_plot()
+        # 5
+        # visualizer.plot_average_vectors(sim.df)
+        # 6
+        # visualizer.plot_relative_clusters()
 
-    print(sim.predict(k=5))
+        visualizer.plot_all_figures()
 
-    # Visualization
-
-    visualizer = vis.Visualization(model.model)
-
-    # 1
-    # visualizer.plot_pca()
-    # 2
-    # visualizer.plot_tsne()
-    # 3
-    # visualizer.plot_keys_cluster()
-    # 4
-    # visualizer.tsne_3d_plot()
-    # 5
-    # visualizer.plot_average_vectors(sim.df)
-    # 6
-    # visualizer.plot_relative_clusters()
-
-    # visualizer.plot_all_figures()
+    #################
+    # print(sim.find_similar_article(111, 5))
+    # print(df["Title"][111])
+    # print(df["Title"][85])
+    # print(df["Title"][91])
+    # print(df["Title"][88])
+    # print(df["Title"][142])
+    # print(df["Title"][114])
+    # print(sim.predict(k=5))
 
 
 if __name__ == "__main__":
