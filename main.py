@@ -16,19 +16,12 @@ import argparse
 def main():
 
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
-
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
-
     parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
-
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
-
     parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
-
     parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
-
     parser.add_argument("-R", "--report", help="create visual report", action="store_true")
-
     args = parser.parse_args()
 
     # LivingsdocsApi: creating database -L
