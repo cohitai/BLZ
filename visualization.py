@@ -293,7 +293,7 @@ class Visualization:
         return embedding_clusters, word_clusters
 
     def plot_all_figures(self):
-        print(output_path+'fig1.png')
+        print("visual report in the making, images 1 - 6:")
         try:
             img1 = mpimg.imread(output_path+'fig1.png')
             img2 = mpimg.imread(output_path+'fig2.png')
