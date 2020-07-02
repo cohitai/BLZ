@@ -48,8 +48,8 @@ model = w2v.W2V("/home/blz/Desktop/output/sqldatabase.db")
 
 model.load_model("/home/blz/Desktop/output/models/model_2020-07-02-10:12:15.model")
 
-print(model.model.wv.vocab.keys())
-print(model.model.wv.vectors.shape[0])
+#print(model.model.wv.vocab.keys())
+#print(model.model.wv.vectors.shape[0])
 
 # Similarity
 
@@ -71,16 +71,16 @@ print(df["Title"][114])
 
 visualizer = vis.Visualization(model.model)
 # 1
-#visualizer.plot_pca()
+# visualizer.plot_pca()
 # 2
-#visualizer.plot_tsne()
+visualizer.plot_tsne()
 # 3
-#visualizer.plot_keys_cluster()
+# visualizer.plot_keys_cluster()
 # 4
-#visualizer.tsne_3d_plot()
+# visualizer.tsne_3d_plot()
 # 5
-#visualizer.plot_average_vectors(df)
+# visualizer.plot_average_vectors(df)
 # 6
 #visualizer.plot_relative_clusters()
 
-visualizer.plot_all_figures()
+#visualizer.plot_all_figures()

@@ -3,11 +3,13 @@ from sklearn.manifold import TSNE
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import matplotlib.cm as cm
+# import matplotlib.cm as cm
 import pandas as pd
 import numpy as np
 import itertools
 from sklearn.preprocessing import normalize
+
+cm = plt.get_cmap('rainbow')
 
 
 class Visualization:
@@ -92,7 +94,7 @@ class Visualization:
         plt.figure(figsize=(16, 16))
         plt.box(False)
         plt.axis('off')
-        colors = cm.rainbow(np.linspace(0, 1, len(labels)))
+        colors = cm(np.linspace(0, 1, len(labels)))
         for label, embeddings, words, color in zip(labels, embedding_clusters, word_clusters, colors):
             x = embeddings[:, 0]
             y = embeddings[:, 1]
@@ -128,7 +130,7 @@ class Visualization:
 
         fig = plt.figure()
         Axes3D(fig)
-        colors = cm.rainbow(np.linspace(0, 1, 1))
+        colors = cm(np.linspace(0, 1, 1))
         plt.scatter(embeddings[:, 0], embeddings[:, 1], embeddings[:, 2], c=colors, alpha=a, label=label)
         plt.legend(loc=4)
         plt.title(title)
@@ -174,7 +176,7 @@ class Visualization:
 
         plt.figure(figsize=(8, 4))
         plt.title(title)
-        colors = cm.rainbow(np.linspace(0, 1, len(label)))
+        colors = cm(np.linspace(0, 1, len(label)))
         tsne_embeddings, embeddings_blz_2d = plotting_data
 
         for vect, label, color in zip(tsne_embeddings, label, colors):
@@ -256,7 +258,7 @@ class Visualization:
         plt.box(False)
         plt.grid(False)
         plt.axis('off')
-        colors = cm.rainbow(np.linspace(0, 1, len(keys)))
+        colors = cm(np.linspace(0, 1, len(keys)))
 
         for key, vect, color in zip(keys, vec, colors):
             x = vect[:, 0]
