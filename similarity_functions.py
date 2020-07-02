@@ -6,8 +6,9 @@ from operator import itemgetter
 
 class Similarity:
 
-    def __init__(self, model):
+    def __init__(self, model, df):
         self.word_vectors = model.wv
+        self.df = df
 
     @staticmethod
     def cosine_similarity(u, v):
@@ -92,13 +93,13 @@ class Similarity:
         else:
             return sum_temp / number_of_sentences
 
-    def add_average_vector(self, df):
+    def add_average_vector(self):
 
         """method to compute and to add the average vector feature"""
 
-        df["Average_vector"] = df["Tokenized_sents"].apply(self.sentence_to_avg)
+        self.df["Average_vector"] = self.df["Tokenized_sents"].apply(self.sentence_to_avg)
 
-    def find_similar_article(self, df, n, k):
+    def find_similar_article(self, n, k):
 
         """function finds k similar articles to an article with index n;
         Argument: integers n,k.
@@ -106,11 +107,16 @@ class Similarity:
         Returns : k integer indices similar to n."""
 
         list_distances = []
-        for i in range(df.shape[0]):
+        for i in range(self.df.shape[0]):
             if i == n:
                 continue
-            list_distances.append((i, self.cosine_similarity(df["Average_vector"][n], df["Average_vector"][i])))
+            list_distances.append((i, self.cosine_similarity(self.df["Average_vector"][n], self.df["Average_vector"][i])))
         return sorted(list_distances, key=itemgetter(1))[-k:]
 
-    def predict(self):
-        pass
+    def predict(self, k):
+        """:param k: number of predictions
+           :return a dictionary"""
+        return {self.i2docid(i): [self.i2docid(tup[0]) for tup in self.find_similar_article(i, k)][::-1] for i in range(self.df.shape[0]) }
+
+    def i2docid(self, i):
+        return self.df.iloc[i]["DocId"]
