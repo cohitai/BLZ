@@ -20,7 +20,6 @@ class Visualization:
     global output_path
     output_path = "/home/blz/Desktop/output/"
 
-
     # 1
     def plot_pca(self, title="pca 2D"):
 
@@ -30,11 +29,11 @@ class Visualization:
         # create PCA object for mat.
         pca = PCA(n_components=2)
         pca.fit(self.mat)
-        X = pca.transform(self.mat)
+        x = pca.transform(self.mat)
 
         # set axis.
-        xs = X[:, 0]
-        ys = X[:, 1]
+        xs = x[:, 0]
+        ys = x[:, 1]
 
         # plot pca.
         plt.figure(figsize=(6, 4), frameon=False)
@@ -50,13 +49,13 @@ class Visualization:
 
         """ 2 dimension visualization using t- sne"""
 
-        X = self.model.wv[self.model.wv.vocab]
+        x = self.model.wv[self.model.wv.vocab]
         tsne = TSNE(n_components=2)
-        X_tsne = tsne.fit_transform(X)
-        plt.figure(figsize=(6, 4),frameon=False)
+        x_tsne = tsne.fit_transform(x)
+        plt.figure(figsize=(6, 4), frameon=False)
         plt.box(False)
         plt.axis('off')
-        plt.scatter(X_tsne[:, 0], X_tsne[:, 1], alpha=0.7)
+        plt.scatter(x_tsne[:, 0], x_tsne[:, 1], alpha=0.7)
         plt.title(title)
         plt.savefig(output_path+"fig2.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
@@ -82,7 +81,7 @@ class Visualization:
         embedding_clusters = np.array(embedding_clusters)
         n, m, k = embedding_clusters.shape
         tsne_model_en_2d = TSNE(perplexity=15, n_components=2, init='pca', n_iter=2300, random_state=20)
-        embeddings_en_2d = np.array(tsne_model_en_2d.fit_transform(embedding_clusters.reshape(n * m, k))).reshape(n, m, 2 )
+        embeddings_en_2d = np.array(tsne_model_en_2d.fit_transform(embedding_clusters.reshape(n * m, k))).reshape(n, m, 2)
         self.tsne_plot_similar_words(title, keys, embeddings_en_2d, word_clusters, 0.7)
 
     @staticmethod
@@ -122,7 +121,6 @@ class Visualization:
 
         self.tsne_plot_3d('Visualizing Embeddings using t-SNE 3D', 'word embedding', embeddings_3d, a=1)
 
-
     @staticmethod
     def tsne_plot_3d(title, label, embeddings, a=1):
 
@@ -137,7 +135,7 @@ class Visualization:
         plt.savefig(output_path+"fig4.png", format='png', dpi=150, bbox_inches='tight')
         plt.show()
 
-    #5
+    # 5
 
     def plot_average_vectors(self, df, title="t-sne article embeddings vectors grouped by the sections"):
 
@@ -211,15 +209,15 @@ class Visualization:
 
         res = []
         for key, value in itertools.groupby(input_list, lambda x: x[1]):
-            l = []
+            l_tmp = []
             for val in value:
-                l.append(val)
-            res.append(l)
+                l_tmp.append(val)
+            res.append(l_tmp)
 
         # forget second coordinate and return:
         return [[y[0] for y in x] for x in res]
 
-    #6
+    # 6
 
     def plot_relative_clusters(self, title="Relative t-SNE ; keys clusters versus model vectors in background",
                                keys=('deutschland', 'merkel', 'corona', 'mutt', 'arzt', 'polit')):
@@ -292,7 +290,8 @@ class Visualization:
 
         return embedding_clusters, word_clusters
 
-    def plot_all_figures(self):
+    @staticmethod
+    def plot_all_figures():
         print("visual report in the making, images 1 - 6:")
         try:
             img1 = mpimg.imread(output_path+'fig1.png')

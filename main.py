@@ -1,5 +1,5 @@
 import XML_reader as XmlReader
-import webscrapper as Scrapper
+import webscrapper as scrapper
 import preprocessing as pp
 import LivingdocsApi as Liv
 import word2vecmodel as w2v
@@ -14,14 +14,15 @@ import visualization as vis
     5. visualization. (Object)
     6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
-# Converting files (obsolite).
+# Converting files (obsolete ).
 
 # XmlReader.XML_reader()
 
 # LivingsdocsApi: creating database.
 
 Li = Liv.LivingDocs()
-Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
+Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",
+                  source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/')
 # Li.update_server()
 
 # Li.transform()
@@ -29,8 +30,8 @@ Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_
 
 # Web Scrapping.
 
-scrapper = Scrapper.WebScrapper()
-# df = scrapper.create_df(save=True)
+#scrapper = scrapper.WebScrapper()
+#df = scrapper.create_df(save=True)
 
 # load an existing web scrapping data frame.
 df = pp.load_data_frame()
@@ -41,14 +42,14 @@ df = pp.load_data_frame()
 
 model = w2v.W2V("/home/blz/Desktop/output/sqldatabase.db")
 
-# model.fit(500, 20, 5, 4)
+#model.fit(500, 20, 5, 4)
 
 # load a model from file.
 
-model.load_model("/home/blz/Desktop/output/models/model_2020-07-01-12:23:53.model")
+model.load_model("/home/blz/Desktop/output/models/model_2020-07-02-10:12:15.model")
 
-# print(model.model.wv.vocab.keys())
-# print(model.model.wv.vectors.shape[0])
+print(model.model.wv.vocab.keys())
+print(model.model.wv.vectors.shape[0])
 
 # Similarity
 
@@ -60,11 +61,11 @@ df = sim.add_average_vector(df)
 
 print(sim.find_similar_article(df, 111, 5))
 print(df["Title"][111])
-print(df["Title"][103])
-print(df["Title"][105])
-print(df["Title"][118])
-print(df["Title"][119])
-print(df["Title"][31])
+print(df["Title"][85])
+print(df["Title"][91])
+print(df["Title"][88])
+print(df["Title"][142])
+print(df["Title"][114])
 
 # Visualization
 

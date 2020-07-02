@@ -86,14 +86,14 @@ class WebScrapper:
 
         return pd.DataFrame(db, columns=['Date', 'Author', 'Title', 'Text', 'Url', 'Section'])
 
-    def create_df(self,save=False, df_path="/home/blz/Desktop/output/df.csv"):
+    def create_df(self, save=False, df_path="/home/blz/Desktop/output/df.csv"):
         """main method for scrapping """
         url_list = self._get_all_links(self._get_main_categories())
         df = pp.edit_data_frame(self._create_database(url_list))
 
         # saving df as a csv file.
         if save:
-            print("saving web scrapping file at:",df_path)
+            print("saving web scrapping file at:", df_path)
             df.to_csv(df_path)
 
         return df

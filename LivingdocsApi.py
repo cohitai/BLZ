@@ -16,20 +16,12 @@ csv.field_size_limit(sys.maxsize)
 logging.basicConfig(level=logging.DEBUG)
 
 
-#logging.basicConfig(filename='example.log',level=logging.DEBUG)
-#logging.debug('This message should go to the log file')
-#logging.info('So should this')
-#logging.warning('And this, too')
-
-###### hello 23.6.20 15:50
-
-
 class LivingDocs:
-    # Api Token for the production server
+    # Api Token (production server)
     api_key1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6InB1YmxpYy1hcGk6cmVhZCIsIm5hbWUiOiJUZXN0IiwicHJvamVjdElkIjoxLCJjaGFubmVsSWQiOjEsInR5cGUiOiJjbGllbnQiLCJqdGkiOiJlMjg1NWM1YS0xNGRiLTRkZTUtYjJlYS0wNTgwM2UwNzkzYTQiLCJjb2RlIjoiZTI4NTVjNWEtMTRkYi00ZGU1LWIyZWEtMDU4MDNlMDc5M2E0IiwiaWF0IjoxNTg5MzU3ODUxfQ.o6nTZdozih2vz9wpEXNJOyh60C9vjzu0ofLukcADiTg"
 
-    def __init__(self, source="/home/blz/Desktop/Livingdocs2/", target="/home/blz/Desktop/Livingsdocs2_files/"
-                 , output_directory="/home/blz/Desktop/output/"):
+    def __init__(self, source="/home/blz/Desktop/Livingdocs2/", target="/home/blz/Desktop/Livingsdocs2_files/",
+                 output_directory="/home/blz/Desktop/output/"):
 
         self.source = source
         self.target = target
@@ -185,7 +177,7 @@ class LivingDocs:
         mydata = pd.read_csv(self.return_last_file(path))
         pre = int(mydata.iloc[0, :]["systemdata.documentId"])
         post = int(mydata.iloc[-1, :]["systemdata.documentId"])
-        return (pre, post)
+        return pre, post
 
     @staticmethod
     def count_lines(path):
@@ -206,20 +198,20 @@ class LivingDocs:
             return 0
 
     @staticmethod
-    def crop_query(df, id=0, unpublish=False):
+    def crop_query(df, log_id=0, unpublish=False):
 
         """ function reduces df to documentType = "article" and crops it at "id" """
         if not unpublish:
-            return df.query('documentType == "article" & id > {0} & eventType != "unpublish"'.format(id))
+            return df.query('documentType == "article" & id > {0} & eventType != "unpublish"'.format(log_id))
         else:
-            return df.query('documentType == "article" & id > {0} & eventType == "unpublish"'.format(id))
+            return df.query('documentType == "article" & id > {0} & eventType == "unpublish"'.format(log_id))
 
-    def extract_doc(self, DocId):
+    def extract_doc(self, docid):
 
         """function retrieves json type object (dict) from document: DocId"""
 
         url = 'https://api.berliner-zeitung.de/blz/v1/print/document?documentId={1}&access_token={0}'.format(
-            self.api_key1, DocId)
+            self.api_key1, docid)
         req = requests.get(url)
 
         return json.loads(req.content)
@@ -246,7 +238,7 @@ class LivingDocs:
 
         """function locates the file that contains doc_id.
         :param d: a DataFrame describing csv files.
-                doc_id: integer id of a document.
+        :param doc_id: integer id of a document.
         :returns path of the csv file in the database which contains doc_id."""
 
         try:
@@ -257,28 +249,28 @@ class LivingDocs:
     def sizes_list(self, a, b):
 
         """helper function to create a split.
-           :param: a - recent file available capacity (int).
-                  b - length of all articles to be stored in the current update (int).
+           :param a - recent file available capacity (int).
+           :param b - length of all articles to be stored in the current update (int).
 
-           :returns:  list 'l' with integers.
+           :returns:  list 'l_sizes' with integers.
 
-           len(l) = number of files needed for the update:
+           len(l_sizes) = number of files needed for the update:
            its elements are the number of articles to be stored in each file."""
 
         a = self.relu(a)
-        l = []
+        l_sizes = []
 
         if b == 0:
-            return l
+            return l_sizes
 
         while b // 1000 >= 0:
-            l.append(min(a, b))
+            l_sizes.append(min(a, b))
             b -= min(a, b)
             if b == 0:
-                return l
+                return l_sizes
             a = 1000
 
-        return l
+        return l_sizes
 
     def get_articles_from_server(self, id_start=0):
 
@@ -348,7 +340,6 @@ class LivingDocs:
         print("updating database, starting at DocId  = ", after)
 
         #
-
         d = self.create_files_database()
 
         # exclude empty source directory case
@@ -376,7 +367,7 @@ class LivingDocs:
         df_up = df_re[mask]['documentId']
         df_do = df_re[~mask]['documentId']
 
-        ## appending new docs ##
+        # appending new docs
 
         #
         print("updating new documents")
@@ -424,7 +415,7 @@ class LivingDocs:
                 next_docid = articles[0]
                 dest = self.source + "Livingsdocs_{0}.csv".format(next_docid)
 
-        ## updating old docs ##
+        # updating old docs
 
         #
         print("Updating old documents:")
@@ -479,8 +470,6 @@ class LivingDocs:
 
     # remove all unpublished files:
         self._remove_deleted()
-
-
 
     @staticmethod
     def json_to_text(obj):
@@ -575,7 +564,6 @@ class LivingDocs:
         print(len(deleted_articles))
         d = self.create_files_database()
 
-        cnt = 0
         for i in range(len(deleted_articles)):
             current_path = self.match_file_to_docid(d, deleted_articles[i])
             print(deleted_articles[i], ":", current_path)
@@ -685,7 +673,7 @@ class LivingDocs:
 
         for file_path in sorted_list:
             with open(file_path, 'r') as file:
-                dr = csv.DictReader(file) # comma is default delimiter
+                dr = csv.DictReader(file)  # comma is default delimiter
                 to_db = [(i['documentId'], i['section'], i['title'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
                 cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?);", to_db)
                 conn.commit()
