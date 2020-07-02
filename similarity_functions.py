@@ -111,3 +111,6 @@ class Similarity:
                 continue
             list_distances.append((i, self.cosine_similarity(df["Average_vector"][n], df["Average_vector"][i])))
         return sorted(list_distances, key=itemgetter(1))[-k:]
+
+    def predict(self):
+        pass
