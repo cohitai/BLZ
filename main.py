@@ -19,13 +19,15 @@ def main():
 
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
 
-    parser.add_argument("-B", "--BLZ", help="scrap the website", action="store_true")
+    parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
 
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
 
     parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
 
-    parser.add_argument("-V", "--visualization", help="create visual report", action="store_true")
+    parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
+
+    parser.add_argument("-R", "--report", help="create visual report", action="store_true")
 
     args = parser.parse_args()
 
@@ -47,7 +49,7 @@ def main():
 
     blz_scrapper = scrapper.WebScrapper()
 
-    if args.livingdocs:
+    if args.blz:
         df = blz_scrapper.create_df(save=True)
 
     else:
@@ -67,27 +69,28 @@ def main():
 
     # Similarity -P
     # instantiate similarity object from an existing model.
+    sim = aux.Similarity(model.model, df)
+    sim.add_average_vector()
+
     if args.predict:
-        sim = aux.Similarity(model.model, df)
-        sim.add_average_vector()
         print(sim.predict(k=5))
 
     # Visualization -V
     if args.visualization:
         visualizer = vis.Visualization(model.model)
-
-        # 1
-        # visualizer.plot_pca()
-        # 2
-        # visualizer.plot_tsne()
-        # 3
-        # visualizer.plot_keys_cluster()
-        # 4
-        # visualizer.tsne_3d_plot()
-        # 5
-        # visualizer.plot_average_vectors(sim.df)
-        # 6
-        # visualizer.plot_relative_clusters()
+        if args.report:
+            # 1
+            visualizer.plot_pca()
+            # 2
+            visualizer.plot_tsne()
+            # 3
+            visualizer.plot_keys_cluster()
+            # 4
+            visualizer.tsne_3d_plot()
+            # 5
+            visualizer.plot_average_vectors(sim.df)
+            # 6
+            visualizer.plot_relative_clusters()
 
         visualizer.plot_all_figures()
 
