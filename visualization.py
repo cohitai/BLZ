@@ -3,7 +3,6 @@ from sklearn.manifold import TSNE
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-# import matplotlib.cm as cm
 import pandas as pd
 import numpy as np
 import itertools
