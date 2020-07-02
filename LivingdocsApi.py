@@ -653,10 +653,10 @@ class LivingDocs:
 
         # putting header
         with open(sorted_list[0]) as file:
-                csvreader = csv.reader(file)
-                l = next(csvreader)
+            csvreader = csv.reader(file)
+            l = next(csvreader)
 
-        sql_create_Livingdocs_articles_table = """ CREATE TABLE IF NOT EXISTS Livingdocs_articles (
+        sql_create_Livingdocs_articles_table = """CREATE TABLE IF NOT EXISTS Livingdocs_articles (
                                                 {0} integer PRIMARY KEY,
                                                 {1} text,
                                                 {2} text,
@@ -665,7 +665,7 @@ class LivingDocs:
                                                 {5} text,
                                                 {6} text,
                                                 {7} text
-                                            ); """.format(*l)
+                                            );""".format(*l)
 
         if conn is not None:
             # create Livingdocs_articles table

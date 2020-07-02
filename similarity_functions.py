@@ -48,17 +48,17 @@ class Similarity:
 
     def sentence_to_avg(self, token_text):
 
-        """function converts a text (list of strings) into a vector in the embedded space.
+        """function vectorizes text (list of strings) into the embedded space.
         Extracts the w2v representation of each word
         and then averages the list into a single
         vector.
 
-        Arguments:
-        token_text -- string representing a list of lists originated from an article .
+        :param
+        token_text: string representing a list of lists originated from an article.
 
-        Returns:
+        :returns
         average vector encoding information
-        about the article, as numpy-array"""
+        about the article, as numpy-array."""
 
         # unpacking the string back into a list of lists.
         try:
@@ -97,8 +97,6 @@ class Similarity:
         """method to compute and to add the average vector feature"""
 
         df["Average_vector"] = df["Tokenized_sents"].apply(self.sentence_to_avg)
-
-        return df
 
     def find_similar_article(self, df, n, k):
 

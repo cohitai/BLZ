@@ -6,31 +6,30 @@ import preprocessing as pp
 
 
 class WebScrapper:
-    def __init__(self, URL="https://www.berliner-zeitung.de"):
-        self.URL = URL
+    def __init__(self, url="https://www.berliner-zeitung.de"):
+        self.url = url
 
     def _get_main_categories(self):
 
-        """ method returns all url- links in URL as tupled list consists of topic and link.
+        """ method returns all url- links in url as tupled list consists of topic and link.
         :returns
         avg: tuples list. Each tuple has 2 arguments:
                           (topic, url link).
         """
-        page = requests.get(self.URL)
+        page = requests.get(self.url)
         topic_list = []
-        soup = BeautifulSoup(page.content, "html.parser").find(class_=
-                                                               "m-main-navigation__list")
+        soup = BeautifulSoup(page.content, "html.parser").find(class_="m-main-navigation__list")
         soup = soup.findAll('a', attrs={'href': re.compile("^/")})
         for link in soup:
             topic_list.append(link.get('href'))
-        complete_link_list = [self.URL + x for x in topic_list]
+        complete_link_list = [self.url + x for x in topic_list]
 
         return list(zip(topic_list, complete_link_list))
 
     def _get_all_links(self, categories_and_links):
 
         """function receives tuples list (topics and
-        links) of the main URL and returns all available article in URL.
+        links) of the main URL and returns all available article in url.
         Argument: list of tuples.
 
         :returns a list, all url links of articles available online at URL.
@@ -50,12 +49,12 @@ class WebScrapper:
 
                 if string.startswith(item[0]) and string[-1].isdigit():
                     link_list.append(string)
-        URL_list = [self.URL + x for x in link_list]
+        url_list = [self.url + x for x in link_list]
 
-        return URL_list
+        return url_list
 
     @staticmethod
-    def _create_database(URL_list):
+    def _create_database(url_list):
 
         """function receives a list of urls
         and return a pd database.
@@ -68,21 +67,19 @@ class WebScrapper:
 
         db = []
 
-        for URL_link in URL_list:
-            link = URL_link.rsplit('/', 3)[2]
-            page = requests.get(URL_link)
+        for url_link in url_list:
+            link = url_link.rsplit('/', 3)[2]
+            page = requests.get(url_link)
             soup = BeautifulSoup(page.content, "html.parser")
             body_text = soup.find_all('p', class_="a-paragraph")
-            date = soup.find('p', class_=["a-author date-and-author"]).find(class_=
-                                                                            "ld-date-replace")
-            author = soup.find('p', class_=["a-author date-and-author"]).find(class_=
-                                                                              "ld-author-replace")
+            date = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-date-replace")
+            author = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-author-replace")
             title = soup.title.get_text(" ")
             body = ""
             for line in body_text:
                 body += line.get_text(" ") + " "
 
-            db.append([date, author, title, body, URL_link, link])
+            db.append([date, author, title, body, url_link, link])
 
         return pd.DataFrame(db, columns=['Date', 'Author', 'Title', 'Text', 'Url', 'Section'])
 
