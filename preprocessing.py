@@ -39,7 +39,7 @@ def edit_data_frame(df):
 
     df["Tokenized_sents"] = df["Full_text"].apply(nltk.sent_tokenize)
     df["Tokenized_sents"] = df["Tokenized_sents"].apply(clean_text_from_text)
-    df["DocId"] = df["Url"].apply(fetch_DocId)
+    df["DocId"] = df["Url"].apply(fetch_docid)
 
     return df
 
@@ -65,8 +65,8 @@ def clean_text(path):
        Returns: a list of strings, (cleaned text.)
                                                     """
 
-    with open(path) as file:
-        return clean_text_from_text(file)
+    with open(path) as file1:
+        return clean_text_from_text(file1)
 
 
 def clean_text_from_text(text):
@@ -125,10 +125,10 @@ def replace_hyphen_with_space(tok_list):
     """function replaces hyphen with a whitespace."""
 
     temp = [sent.replace("-", " ") for sent in tok_list]
-    l = []
+    l0 = []
     for w in temp:
-        l += w.split(" ")
-    return l
+        l0 += w.split(" ")
+    return l0
 
 
 def remove_numbers(tok_list):
@@ -202,12 +202,12 @@ def german_stemmer(tok_list):
 
     return [GermanStemmer().stem(word) for word in tok_list]
 
-def fetch_DocId(url):
+
+def fetch_docid(url):
 
     """function extracts DocId from url"""
+
     try:
         return [int(''.join(group)) for key, group in groupby(iterable=url, key=lambda e: e.isdigit()) if key][-1]
     except IndexError:
         return None
-
-

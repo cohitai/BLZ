@@ -94,3 +94,10 @@ class WebScrapper:
             df.to_csv(df_path)
 
         return df
+
+    @staticmethod
+    def load_data_frame(path="/home/blz/Desktop/output/df.csv"):
+
+        """function loads an existing data frame."""
+
+        return pd.read_csv(path, index_col=0)
