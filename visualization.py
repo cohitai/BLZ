@@ -221,7 +221,7 @@ class Visualization:
 
     #6
 
-    def plot_relative_clusters(self, title="Relative t-SNE ; keys clusters versus model vectors as background",
+    def plot_relative_clusters(self, title="Relative t-SNE ; keys clusters versus model vectors in background",
                                keys=('deutschland', 'merkel', 'corona', 'mutt', 'arzt', 'polit')):
 
         vocab_list_model = list(self.model.wv.vocab.keys())
@@ -298,7 +298,7 @@ class Visualization:
             img1 = mpimg.imread(output_path+'fig1.png')
             img2 = mpimg.imread(output_path+'fig2.png')
             img3 = mpimg.imread(output_path+'fig3.png')
-            #img4 = mpimg.imread(output_path+'fig4.png')
+            img4 = mpimg.imread(output_path+'fig4.png')
             img5 = mpimg.imread(output_path+'fig5.png')
             img6 = mpimg.imread(output_path+'fig6.png')
 
@@ -321,12 +321,12 @@ class Visualization:
             plt.axis('off')
             plt.imshow(img3)
 
-            #plt.subplot(122)
-            #plt.box(False)
-            #plt.axis('off')
-            #plt.imshow(img4)
+            plt.subplot(122)
+            plt.box(False)
+            plt.axis('off')
+            plt.imshow(img4)
 
-            #plt.show()
+            plt.show()
 
             plt.figure(3)
             plt.subplot(121)

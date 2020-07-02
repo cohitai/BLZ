@@ -29,7 +29,7 @@ Li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv", source_
 
 # Web Scrapping.
 
-# scrapper = Scrapper.WebScrapper()
+scrapper = Scrapper.WebScrapper()
 # df = scrapper.create_df(save=True)
 
 # load an existing web scrapping data frame.
