@@ -13,6 +13,8 @@ import argparse
     6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
 
+## check check git git Sat 04/07
+
 def main():
 
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
