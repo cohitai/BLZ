@@ -4,6 +4,7 @@ import word2vecmodel as w2v
 import similarity_functions as aux
 import visualization as vis
 import argparse
+import pickle
 
 """ Application for Berliner-Zeitung: 
      
@@ -74,6 +75,12 @@ def main():
 
     if args.predict:
         print(sim.predict(k=5))
+
+        # pickling
+        pickle.dump(sim.predict(k=5), open(li.output_path+"/"+'model.pkl', 'wb'))
+
+        #model = pickle.load(open(li.output_path+"/"+'model.pkl', 'rb'))
+        #print(model[91143])
 
     # Visualization "-V"
     if args.visualization:
