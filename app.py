@@ -15,9 +15,9 @@ def predict():
 
     docid = next(request.form.values())
     print(docid)
-    prediction = model[int(docid)]
+    prediction = model[int(docid)][0]
 
-    return render_template('index.html', prediction_text='Recommendations: {}'.format(prediction))
+    return render_template('index.html', prediction_text='{}'.format(prediction))
 
 
 @app.route('/results', methods=['POST'])
