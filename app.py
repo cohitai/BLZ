@@ -1,4 +1,3 @@
-import numpy as np
 from flask import Flask, request, jsonify, render_template
 import pickle
 
@@ -26,7 +25,7 @@ def results():
 
     data = request.get_json(force=True)
     prediction = model[int(data['DocId'])]
-    prediction = [int(x) for x in prediction]
+    # prediction = [int(x) for x in prediction]
     return jsonify(prediction)
 
 
