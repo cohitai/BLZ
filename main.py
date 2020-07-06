@@ -12,8 +12,8 @@ import argparse
     5. visualization. (Object)
     6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
+# status: 10:15 requirements.txt file updated.
 
-## check check git git Sat 04/07
 
 def main():
 
