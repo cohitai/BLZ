@@ -17,6 +17,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class LivingDocs:
+    """ extracts all data from livingsdocs."""
+
     # Api Token (production server)
     api_key1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6InB1YmxpYy1hcGk6cmVhZCIsIm5hbWUiOiJUZXN0IiwicHJvamVjdElkIjoxLCJjaGFubmVsSWQiOjEsInR5cGUiOiJjbGllbnQiLCJqdGkiOiJlMjg1NWM1YS0xNGRiLTRkZTUtYjJlYS0wNTgwM2UwNzkzYTQiLCJjb2RlIjoiZTI4NTVjNWEtMTRkYi00ZGU1LWIyZWEtMDU4MDNlMDc5M2E0IiwiaWF0IjoxNTg5MzU3ODUxfQ.o6nTZdozih2vz9wpEXNJOyh60C9vjzu0ofLukcADiTg"
 
@@ -560,6 +562,7 @@ class LivingDocs:
     def _remove_deleted(self):
 
         """method removes articles with if an unpublished event exists in log"""
+
         deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
         print(len(deleted_articles))
         d = self.create_files_database()
@@ -640,7 +643,7 @@ class LivingDocs:
             # create Livingdocs_log table
             self._create_table(conn, sql_create_Livingdocs_log_table)
 
-        with open(self.log_file,'r') as fin:
+        with open(self.log_file, 'r') as fin:
             # csv.DictReader uses first line in file for column headings by default
             dr = csv.DictReader(fin) # comma is default delimiter
             to_db = [(i['id'], i['documentId'], i['documentType'], i['createdAt'], i['eventType'], i['publicationId'], i['contentType']) for i in dr]

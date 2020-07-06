@@ -6,6 +6,8 @@ import preprocessing as pp
 
 
 class WebScrapper:
+    """Scrapping Berliner- Zeitung website and creates a dataframe describing articles which are currently online."""
+
     def __init__(self, url="https://www.berliner-zeitung.de"):
         self.url = url
 
@@ -28,11 +30,10 @@ class WebScrapper:
 
     def _get_all_links(self, categories_and_links):
 
-        """function receives tuples list (topics and
-        links) of the main URL and returns all available article in url.
-        Argument: list of tuples.
-
-        :returns a list, all url links of articles available online at URL.
+        """function receives tuples' list (topics and
+        links) from the main;
+        :param: list of tuples.
+        :returns a list of all online articles in the url.
         """
 
         link_list = []
@@ -43,9 +44,8 @@ class WebScrapper:
             for link in soup:
                 string = link.get('href')
 
-                """here it is being checked whether 
-                   the link in soup has the correct form.
-                """
+                """here it is checked whether 
+                   the link in soup has the correct form."""
 
                 if string.startswith(item[0]) and string[-1].isdigit():
                     link_list.append(string)
@@ -59,11 +59,10 @@ class WebScrapper:
         """function receives a list of urls
         and return a pd database.
 
-        Argument: list of links of articles.
+        :param: list of links of articles.
 
-        Returns: a pd Data frame with features:
-                'Date','Author','Title','Text','Url','Section'.
-        """
+        :returns: a Data frame with features:
+                'Date','Author','Title','Text','Url','Section'."""
 
         db = []
 
@@ -84,7 +83,9 @@ class WebScrapper:
         return pd.DataFrame(db, columns=['Date', 'Author', 'Title', 'Text', 'Url', 'Section'])
 
     def create_df(self, save=False, df_path="/home/blz/Desktop/output/df.csv"):
-        """main method for scrapping """
+
+        """main method for scrapping"""
+
         url_list = self._get_all_links(self._get_main_categories())
         df = pp.edit_data_frame(self._create_database(url_list))
 

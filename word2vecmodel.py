@@ -14,7 +14,8 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 
 class W2V:
-    """creates and trains w2v model from an sql db"""
+
+    """creates and trains w2v model from an sql database"""
 
     def __init__(self, path_to_db, models_directory):
         # self.source = source
