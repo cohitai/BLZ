@@ -342,4 +342,4 @@ class Visualization:
             plt.show()
 
         except FileNotFoundError:
-            print("file does not exists.")
+            print("one of the png files does not exists.")

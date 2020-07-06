@@ -12,7 +12,7 @@ import argparse
     5. visualization. (Object)
     6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
-# status: 10:15 requirements.txt file updated.
+# status: 11:45 requirements.txt file updated.
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
     parser.add_argument("-R", "--report", help="create visual report", action="store_true")
     args = parser.parse_args()
 
-    # LivingsdocsApi: creating database -L
+    # LivingsdocsApi: creating database "-L"
 
     li = Liv.LivingDocs()
     li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",
@@ -40,7 +40,7 @@ def main():
     else:
         li.sql_path = li.output_path+"sqldatabase.db"
 
-    # Web Scrapping -B
+    # Web Scrapping "-B"
 
     blz_scrapper = scrapper.WebScrapper()
 
@@ -51,18 +51,18 @@ def main():
         # load an existing web scrapping data frame.
         df = blz_scrapper.load_data_frame()
 
-    # Modeling (w2v model) -M
-    model = w2v.W2V(li.sql_path)
+    # Modeling (w2v model) "-M"
+    model = w2v.W2V(li.sql_path, models_directory="/home/blz/Desktop/output/models")
 
     # create a new model with parameters: embedding size, window size, min count, workers.
     if args.fit:
         model.fit(args.fit[0], args.fit[1], args.fit[2], args.fit[3])
     else:
-        model.load_model("/home/blz/Desktop/output/models/model_2020-07-02-10:12:15.model")
+        model.load_model()
     # print(model.model.wv.vocab.keys())
     # print(model.model.wv.vectors.shape[0])
 
-    # Similarity -P
+    # Similarity "-P"
     # instantiate similarity object from an existing model.
     sim = aux.Similarity(model.model, df)
     sim.add_average_vector()
@@ -70,9 +70,11 @@ def main():
     if args.predict:
         print(sim.predict(k=5))
 
-    # Visualization -V
+    # Visualization "-V"
     if args.visualization:
         visualizer = vis.Visualization(model.model)
+
+        # Report "-R"
         if args.report:
             # 1
             visualizer.plot_pca()

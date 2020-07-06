@@ -16,23 +16,37 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 class W2V:
     """creates and trains w2v model from an sql db"""
 
-    def __init__(self, path_to_db):
+    def __init__(self, path_to_db, models_directory):
         # self.source = source
 
         self.path_to_db = path_to_db
         self.model = None
+        self.models_directory = models_directory
         self.model_name = None
         self.model_path = None
         self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
         self.epochs = None
 
-    def load_model(self, model_path):
+    def load_model(self):
 
-        """method to load a trained model path.
-        :param model_path: string"""
+        """method to load a trained model path. sort out the most recent one. """
 
-        self.model = Word2Vec.load(model_path)
-        self.model_path = Word2Vec.load(model_path)
+        self.model_path = self._locate_last_model(self.models_directory)
+        self.model = Word2Vec.load(self.model_path)
+
+    @staticmethod
+    def _locate_last_model(path):
+        """function locate the most recent model and return its path
+        :param: path (string)
+        :returns: path (string) path to most recent model."""
+
+        model_list = glob.glob(path + "/" + "*.model")
+
+        if not model_list:
+            raise FileExistsError('There are no saved models available.')
+
+        return sorted(model_list, key=lambda d: int(
+            time.mktime(time.strptime(model_list[0].split("_")[-1][:-6], "%Y-%m-%d-%H:%M:%S"))))[0]
 
     @staticmethod
     def _get_header(cur):
@@ -136,7 +150,6 @@ class W2V:
             self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
 
         # save to file
-
         self.model.save(self.model_path)
 
         return self.model
