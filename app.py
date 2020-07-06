@@ -25,10 +25,9 @@ def predict():
 def results():
 
     data = request.get_json(force=True)
-    prediction = model[data['DocId']]
-
-    output = prediction[0]
-    return jsonify(output)
+    prediction = model[int(data['DocId'])]
+    prediction = [int(x) for x in prediction]
+    return jsonify(prediction)
 
 
 if __name__ == "__main__":
