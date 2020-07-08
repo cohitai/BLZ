@@ -15,9 +15,10 @@ def predict():
 
     docid = next(request.form.values())
     print(docid)
-    prediction = model[int(docid)][0]
+    prediction = model[int(docid)]
 
-    return render_template('index.html', prediction_text='{}'.format(prediction))
+    return render_template('index.html', prediction_text1='{}'.format(prediction[0]), prediction_text2='{}'.format(prediction[1]), prediction_text3='{}'.format(prediction[2])
+                           , prediction_text4='{}'.format(prediction[3]), prediction_text5='{}'.format(prediction[4]))
 
 
 @app.route('/results', methods=['POST'])
@@ -27,6 +28,11 @@ def results():
     prediction = model[int(data['DocId'])]
     # prediction = [int(x) for x in prediction]
     return jsonify(prediction)
+
+
+@app.route('/test/<int:docid>', methods=['GET'])
+def get_prediction(docid):
+    return jsonify({"prediction": model[docid]})
 
 
 if __name__ == "__main__":
