@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 import pickle
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
@@ -8,6 +9,14 @@ model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        return 'file uploaded successfully'
 
 
 @app.route('/predict', methods=['POST'])

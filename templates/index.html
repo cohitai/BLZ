@@ -9,7 +9,7 @@
 <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body style="background: #000;">
+<body style="background: #FFFFFF">
  <div class="login">
 	<h1>BLZ: Recommendations Engine</h1>
 
@@ -29,6 +29,11 @@
    <a href = {{prediction_text5}}> Recommendation 5 </a>
  </div>
 
+
+ <form action = "http://localhost:5000/uploader" method = "POST" enctype = "multipart/form-data">
+     <input type = "file" name = "file" />
+     <input type = "submit"/>
+ </form>
 
 </body>
 </html>
