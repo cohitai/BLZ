@@ -2,9 +2,15 @@ from flask import Flask, request, jsonify, render_template
 import pickle
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
-model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
+# current work space:
+import os
+os.chdir(os.path.dirname(__file__))
+print(os.getcwd())
 
+
+app = Flask(__name__)
+global model
+model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
 
 @app.route('/')
 def home():
@@ -15,6 +21,8 @@ def home():
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
+        global model
+        model = pickle.load(f)
         f.save(secure_filename(f.filename))
         return 'file uploaded successfully'
 
@@ -32,7 +40,7 @@ def predict():
 
 @app.route('/results', methods=['POST'])
 def results():
-
+    global model
     data = request.get_json(force=True)
     prediction = model[int(data['DocId'])]
     # prediction = [int(x) for x in prediction]
