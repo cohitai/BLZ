@@ -4,14 +4,11 @@ import os
 from werkzeug.utils import secure_filename
 
 # current work space:
-import os
-os.chdir(os.path.dirname(__file__))
-print("current workplace:", os.getcwd())
+# import os
+# os.chdir(os.path.dirname(__file__))
+# print("current workplace:", os.getcwd())
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = "/home/blz/PycharmProjects/blzproject/git_workspace/BLZ/"
-# global model
-# model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
 
 @app.route('/')
 def home():
@@ -33,7 +30,6 @@ def upload_file():
 def predict():
 
     docid = next(request.form.values())
-    print(docid)
     prediction = model[int(docid)]
 
     return render_template('index.html', prediction_text1='{}'.format(prediction[0]), prediction_text2='{}'.format(prediction[1]), prediction_text3='{}'.format(prediction[2])
