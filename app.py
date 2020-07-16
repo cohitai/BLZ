@@ -1,16 +1,17 @@
 from flask import Flask, request, jsonify, render_template
 import pickle
+import os
 from werkzeug.utils import secure_filename
 
 # current work space:
 import os
 os.chdir(os.path.dirname(__file__))
-print(os.getcwd())
-
+print("current workplace:", os.getcwd())
 
 app = Flask(__name__)
-global model
-model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
+app.config['UPLOAD_FOLDER'] = "/home/blz/PycharmProjects/blzproject/git_workspace/BLZ/"
+# global model
+# model = pickle.load(open("/home/blz/Desktop/output/model.pkl", 'rb'))
 
 @app.route('/')
 def home():
@@ -23,7 +24,8 @@ def upload_file():
         f = request.files['file']
         global model
         model = pickle.load(f)
-        f.save(secure_filename(f.filename))
+        # contents = f.read()
+        pickle.dump(model, open('model.pkl', 'wb'))
         return 'file uploaded successfully'
 
 
