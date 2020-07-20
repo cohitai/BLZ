@@ -6,11 +6,11 @@ import visualization as vis
 import argparse
 import pickle
 
-""" Application for Berliner-Zeitung: 
+""" Web. Application for Berliner-Zeitung: 
      
     consists of 6 objects/modules plus a main function to generates recommendations by similarity. 
     
-    Explicity: 
+    Units: 
         1. webscrapper. generating a data frame from blz website. (Object)
         2. preprocessing. (Module)
         3. word2vecmodel. (Object)
