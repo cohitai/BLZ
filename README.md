@@ -1,2 +1,2 @@
 # BLZ
-a little Project
+Project
