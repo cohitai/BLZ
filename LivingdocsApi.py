@@ -154,7 +154,7 @@ class LivingDocs:
 
     def return_last_file(self, path=None):
 
-        """ function recieves a distination and retrieves the path of the last file by
+        """ function recieves a destination and retrieves the path of the last file by
         self- ordering."""
 
         if not path:

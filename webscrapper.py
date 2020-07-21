@@ -6,7 +6,7 @@ import preprocessing as pp
 
 
 class WebScrapper:
-    """Scrapping Berliner- Zeitung website and creates a dataframe describing articles which are currently online."""
+    """Scrapping Berliner-Zeitung website and creates a dataframe describing articles which are currently online."""
 
     def __init__(self, url="https://www.berliner-zeitung.de"):
         self.url = url

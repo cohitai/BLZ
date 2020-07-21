@@ -6,7 +6,7 @@ import visualization as vis
 import argparse
 import pickle
 
-""" Web. Application for Berliner-Zeitung: 
+""" Web- application for Berliner-Zeitung: 
      
     consists of 6 objects/modules plus a main function to generates recommendations by similarity. 
     
