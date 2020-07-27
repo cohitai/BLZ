@@ -37,6 +37,11 @@ def predict():
                            , prediction_text4='{}'.format(prediction[3]), prediction_text5='{}'.format(prediction[4]))
 
 
+@app.route('/query_1', methods=['GET'])
+def relative():
+    return jsonify({"relative": str(list(model.keys()))})
+
+
 @app.route('/results', methods=['POST'])
 def results():
     global model
