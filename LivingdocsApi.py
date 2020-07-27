@@ -608,7 +608,7 @@ class LivingDocs:
 
     def sql_transform(self, file_name):
         """
-        method to transform csv files into one SQL database
+        method to transform csv files into a SQL database
         :param file_name : a string
         :return: sql file
         """
