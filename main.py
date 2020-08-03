@@ -5,6 +5,8 @@ import similarity_functions as aux
 import visualization as vis
 import argparse
 import pickle
+import requests
+import time
 
 """ Web- application for Berliner-Zeitung: 
      
@@ -30,6 +32,8 @@ def main():
     parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
     parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
     parser.add_argument("-R", "--report", help="create visual report", action="store_true")
+    parser.add_argument("-A", "--automate", help="automate server by time", action="store_true")
+
     args = parser.parse_args()
 
     # LivingsdocsApi: creating database "-L"
@@ -112,6 +116,19 @@ def main():
     # print(df["Title"][142])
     # print(df["Title"][114])
     # print(sim.predict(k=5))
+
+    if args.automate:
+        print("Starting automation:")
+        url = "http://localhost/uploader"
+
+        while True:
+            sim.df = blz_scrapper.create_df(save=True)
+            sim.add_average_vector()
+            pickle.dump(sim.predict(k=5), open(li.output_path + "/" + 'model.pkl', 'wb'))
+            files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
+            r = requests.post(url, files=files)
+            print(r.text)
+            time.sleep(600)
 
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ def upload_file():
         f = request.files['file']
         global model
         model = pickle.load(f)
+        print("YES IT IS")
         # contents = f.read()
         pickle.dump(model, open('model.pkl', 'wb'))
         return 'file uploaded successfully'
@@ -42,16 +43,7 @@ def relative():
     return jsonify({"relative": str(list(model.keys()))})
 
 
-@app.route('/results', methods=['POST'])
-def results():
-    global model
-    data = request.get_json(force=True)
-    prediction = model[int(data['DocId'])]
-    # prediction = [int(x) for x in prediction]
-    return jsonify(prediction)
-
-
-@app.route('/test/<int:docid>', methods=['GET'])
+@app.route('/query/<int:docid>', methods=['GET'])
 def get_prediction(docid):
     return jsonify({"prediction": model[docid]})
 
