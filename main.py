@@ -128,7 +128,8 @@ def main():
             files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
             r = requests.post(url, files=files)
             print(r.text)
-            time.sleep(600)
+            print("going to sleep...")
+            time.sleep(3000)
 
 
 if __name__ == "__main__":
