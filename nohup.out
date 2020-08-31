@@ -1,0 +1,114 @@
+[uWSGI] getting INI configuration from /home/blz/Desktop/myapp.ini
+open("./python38_plugin.so"): No such file or directory [core/utils.c line 3732]
+!!! UNABLE to load uWSGI plugin: ./python38_plugin.so: cannot open shared object file: No such file or directory !!!
+*** Starting uWSGI 2.0.19.1 (64bit) on [Tue Jul 21 15:42:12 2020] ***
+compiled with version: 9.3.0 on 08 July 2020 15:57:43
+os: Linux-5.4.0-40-generic #44-Ubuntu SMP Tue Jun 23 00:01:04 UTC 2020
+nodename: blz-MS-7B09
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 24
+current working directory: /home/blz/PycharmProjects/blzproject/git_workspace/BLZ
+detected binary path: /home/blz/.pyenv/versions/3.8-dev/bin/uwsgi
+chdir() to /home/blz/PycharmProjects/blzproject/git_workspace/BLZ/
+your processes number limit is 256533
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address app.sock fd 3
+Python version: 3.8.2 (default, Apr 27 2020, 15:53:34)  [GCC 9.3.0]
+PEP 405 virtualenv detected: /home/blz/myenv/
+Set PythonHome to /home/blz/myenv/
+Python main interpreter initialized at 0x55c417b3ace0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x55c417b3ace0 pid: 16349 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 16349)
+spawned uWSGI worker 1 (pid: 16420, cores: 2)
+spawned uWSGI worker 2 (pid: 16421, cores: 2)
+spawned uWSGI worker 3 (pid: 16422, cores: 2)
+spawned uWSGI worker 4 (pid: 16423, cores: 2)
+[uWSGI] getting INI configuration from /home/blz/Desktop/myapp.ini
+open("./python38_plugin.so"): No such file or directory [core/utils.c line 3732]
+!!! UNABLE to load uWSGI plugin: ./python38_plugin.so: cannot open shared object file: No such file or directory !!!
+*** Starting uWSGI 2.0.19.1 (64bit) on [Tue Jul 21 15:45:21 2020] ***
+compiled with version: 9.3.0 on 08 July 2020 15:57:43
+os: Linux-5.4.0-40-generic #44-Ubuntu SMP Tue Jun 23 00:01:04 UTC 2020
+nodename: blz-MS-7B09
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 24
+current working directory: /home/blz/PycharmProjects/blzproject/git_workspace/BLZ
+detected binary path: /home/blz/.pyenv/versions/3.8-dev/bin/uwsgi
+chdir() to /home/blz/PycharmProjects/blzproject/git_workspace/BLZ/
+your processes number limit is 256533
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address app.sock fd 3
+Python version: 3.8.2 (default, Apr 27 2020, 15:53:34)  [GCC 9.3.0]
+PEP 405 virtualenv detected: /home/blz/myenv/
+Set PythonHome to /home/blz/myenv/
+Python main interpreter initialized at 0x5619bf8eace0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x5619bf8eace0 pid: 16766 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 16766)
+spawned uWSGI worker 1 (pid: 16837, cores: 2)
+spawned uWSGI worker 2 (pid: 16838, cores: 2)
+spawned uWSGI worker 3 (pid: 16839, cores: 2)
+spawned uWSGI worker 4 (pid: 16841, cores: 2)
+[uWSGI] getting INI configuration from /home/blz/Desktop/myapp.ini
+*** Starting uWSGI 2.0.18-debian (64bit) on [Tue Jul 21 15:54:33 2020] ***
+compiled with version: 10.0.1 20200405 (experimental) [master revision 0be9efad938:fcb98e4978a:705510a708d3642c9c962beb663c476167e4e8a4] on 11 April 2020 11:15:55
+os: Linux-5.4.0-40-generic #44-Ubuntu SMP Tue Jun 23 00:01:04 UTC 2020
+nodename: blz-MS-7B09
+machine: x86_64
+clock source: unix
+pcre jit disabled
+detected number of CPU cores: 24
+current working directory: /home/blz/PycharmProjects/blzproject/git_workspace/BLZ
+detected binary path: /usr/bin/uwsgi-core
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+chdir() to /home/blz/PycharmProjects/blzproject/git_workspace/BLZ/
+your processes number limit is 256533
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to UNIX address app.sock fd 3
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+Python version: 3.8.2 (default, Apr 27 2020, 15:53:34)  [GCC 9.3.0]
+PEP 405 virtualenv detected: /home/blz/myenv/
+Set PythonHome to /home/blz/myenv/
+Python main interpreter initialized at 0x562ae6cdbfa0
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 416880 bytes (407 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x562ae6cdbfa0 pid: 17733 (default app)
+uWSGI running as root, you can use --uid/--gid/--chroot options
+*** WARNING: you are running uWSGI as root !!! (use the --uid flag) *** 
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 17733)
+spawned uWSGI worker 1 (pid: 17754, cores: 2)
+spawned uWSGI worker 2 (pid: 17755, cores: 2)
+spawned uWSGI worker 3 (pid: 17756, cores: 2)
+spawned uWSGI worker 4 (pid: 17758, cores: 2)

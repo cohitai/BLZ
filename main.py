@@ -20,7 +20,7 @@ import time
         5. visualization. (Object)
         6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
-# status: 11:45 requirements.txt file updated.
+
 
 
 def main():
@@ -39,7 +39,7 @@ def main():
     # LivingsdocsApi: creating database "-L"
 
     li = Liv.LivingDocs()
-    li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources3.csv",
+    li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources4.csv",
                       source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/',
                       output_directory="/home/blz/Desktop/output/")
 

@@ -138,13 +138,15 @@ class LivingDocs:
             while True:
 
                 items = self._retrieve_logs(pub_event_id)
-                pub_event_id += 1000
+                # pub_event_id += 1000
 
                 for s in items:
                     csv_out.writerow(s)
 
                 if not items:
                     break
+
+                pub_event_id = items[-1][0]
 
         with open(path, 'r') as f:
 
