@@ -47,7 +47,7 @@ class W2V:
             raise FileExistsError('There are no saved models available.')
 
         return sorted(model_list, key=lambda d: int(
-            time.mktime(time.strptime(model_list[0].split("_")[-1][:-6], "%Y-%m-%d-%H:%M:%S"))))[0]
+            time.mktime(time.strptime(d.split("_")[-1][:-6], "%Y-%m-%d-%H:%M:%S"))))[-1]
 
     @staticmethod
     def _get_header(cur):

@@ -84,7 +84,6 @@ def main():
         pickle.dump(sim.predict(k=5), open(li.output_path+"/"+'model.pkl', 'wb'))
 
         # model = pickle.load(open(li.output_path+"/"+'model.pkl', 'rb'))
-        # print(model[91143])
 
     # Visualization "-V"
     if args.visualization:
