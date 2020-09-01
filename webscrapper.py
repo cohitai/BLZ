@@ -67,16 +67,19 @@ class WebScrapper:
         db = []
 
         for url_link in url_list:
-            link = url_link.rsplit('/', 3)[2]
-            page = requests.get(url_link)
-            soup = BeautifulSoup(page.content, "html.parser")
-            body_text = soup.find_all('p', class_="a-paragraph")
-            date = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-date-replace")
-            author = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-author-replace")
-            title = soup.title.get_text(" ")
-            body = ""
-            for line in body_text:
-                body += line.get_text(" ") + " "
+            try:
+                link = url_link.rsplit('/', 3)[2]
+                page = requests.get(url_link)
+                soup = BeautifulSoup(page.content, "html.parser")
+                body_text = soup.find_all('p', class_="a-paragraph")
+                date = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-date-replace")
+                author = soup.find('p', class_=["a-author date-and-author"]).find(class_="ld-author-replace")
+                title = soup.title.get_text(" ")
+                body = ""
+                for line in body_text:
+                    body += line.get_text(" ") + " "
+            except AttributeError:
+                continue
 
             db.append([date, author, title, body, url_link, link])
 
