@@ -118,8 +118,8 @@ def main():
 
     if args.automate:
         print("Starting automation:")
-        url = "http://localhost/uploader"
-
+        # url = "http://localhost/uploader"
+        url = "http://34.123.40.94/uploader"
         while True:
             sim.df = blz_scrapper.create_df(save=True)
             sim.add_average_vector()
