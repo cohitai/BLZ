@@ -5,10 +5,12 @@ import re
 from datetime import datetime
 import pandas as pd
 from itertools import groupby
-
+import os
 # Global variable: stop words from a file.
 
-stop_words_path = "/home/blz/Desktop/output/stopwords.txt"
+
+
+stop_words_path = os.getcwd()+"/stopwords.txt"
 
 with open(stop_words_path, 'r') as file:
     stop_words = [word[0:-1] for word in file]

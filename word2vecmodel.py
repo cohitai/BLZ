@@ -98,7 +98,7 @@ class W2V:
 
         self.model = Word2Vec(size=m, window=n, min_count=s, workers=t)
         self.model_name = "model_" + time.strftime("%Y-%m-%d-%H:%M:%S", time.gmtime())
-        self.model_path = "/home/blz/Desktop/output/models/" + self.model_name + ".model"
+        self.model_path = self.models_directory + self.model_name + ".model"
         self.epochs = epochs
 
         sql_query_3 = """SELECT * FROM Livingdocs_articles WHERE LENGTH(publishdate) > 0 ORDER BY publishdate DESC LIMIT 0,10000 ;"""

@@ -22,13 +22,13 @@ class LivingDocs:
     # Api Token (production server)
     api_key1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6InB1YmxpYy1hcGk6cmVhZCIsIm5hbWUiOiJUZXN0IiwicHJvamVjdElkIjoxLCJjaGFubmVsSWQiOjEsInR5cGUiOiJjbGllbnQiLCJqdGkiOiJlMjg1NWM1YS0xNGRiLTRkZTUtYjJlYS0wNTgwM2UwNzkzYTQiLCJjb2RlIjoiZTI4NTVjNWEtMTRkYi00ZGU1LWIyZWEtMDU4MDNlMDc5M2E0IiwiaWF0IjoxNTg5MzU3ODUxfQ.o6nTZdozih2vz9wpEXNJOyh60C9vjzu0ofLukcADiTg"
 
-    def __init__(self, source="/home/blz/Desktop/Livingdocs2/", target="/home/blz/Desktop/Livingsdocs2_files/",
-                 output_directory="/home/blz/Desktop/output/"):
+    def __init__(self, source, target,
+                 output_directory):
 
-        self.source = source
-        self.target = target
+        self.source = None
+        self.target = None
         self.log_file = None
-        self.output_path = output_directory
+        self.output_path = None
         self.status_id = None
         self.sql_path = None
 
@@ -72,7 +72,7 @@ class LivingDocs:
 
         """download log data from Livingsdocs"""
 
-        path = "/home/blz/Desktop/output/{0}.csv".format(file_name)
+        path = self.output_path+"{0}.csv".format(file_name)
 
         with open(path, 'w') as file:
 
@@ -212,7 +212,9 @@ class LivingDocs:
 
     def extract_doc(self, docid):
 
-        """function retrieves json type object (dict) from document: DocId"""
+        """function retrieves json object (dict) from document.
+        :param docid - integer.
+        :returns - json"""
 
         url = 'https://api.berliner-zeitung.de/blz/v1/print/document?documentId={1}&access_token={0}'.format(
             self.api_key1, docid)
@@ -278,8 +280,8 @@ class LivingDocs:
 
     def get_articles_from_server(self, id_start=0):
 
-        """function extracts articles information from server and
-           saves them as csv files in self.source """
+        """function retrieves articles information from server and
+           saves them as csv's in self.source """
 
         df1 = pd.DataFrame()
 
@@ -329,8 +331,8 @@ class LivingDocs:
 
         current_time = str(time.time())
 
-        with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
-            f.write(self.status_id)
+        # with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
+            # f.write(self.status_id)
 
     def update_server(self, update_eventid=None):
 
@@ -469,8 +471,8 @@ class LivingDocs:
 
         current_time = str(time.time())
 
-        with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
-            f.write(self.status_id)
+        # with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
+            # f.write(self.status_id)
 
     # remove all unpublished files:
         self._remove_deleted()

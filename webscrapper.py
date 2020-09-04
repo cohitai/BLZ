@@ -8,8 +8,9 @@ import preprocessing as pp
 class WebScrapper:
     """Scrapping Berliner-Zeitung website and creates a dataframe describing articles which are currently online."""
 
-    def __init__(self, url="https://www.berliner-zeitung.de"):
+    def __init__(self, output_path, url="https://www.berliner-zeitung.de"):
         self.url = url
+        self.output_path = output_path
 
     def _get_main_categories(self):
 
@@ -85,7 +86,7 @@ class WebScrapper:
 
         return pd.DataFrame(db, columns=['Date', 'Author', 'Title', 'Text', 'Url', 'Section'])
 
-    def create_df(self, save=False, df_path="/home/blz/Desktop/output/df.csv"):
+    def create_df(self, save=False):
 
         """main method for scrapping"""
 
@@ -94,8 +95,8 @@ class WebScrapper:
 
         # saving df as a csv file.
         if save:
-            print("saving web scrapping file at:", df_path)
-            df.to_csv(df_path)
+            print("saving web scrapping file at:", self.output_path)
+            df.to_csv(self.output_path + "df.csv")
 
         return df
 

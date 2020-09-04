@@ -7,6 +7,7 @@ import argparse
 import pickle
 import requests
 import time
+import os
 
 """ Web- application for Berliner-Zeitung: 
      
@@ -26,22 +27,52 @@ import time
 def main():
 
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
-    parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
-    parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
-    parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
-    parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
-    parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
-    parser.add_argument("-R", "--report", help="create visual report", action="store_true")
     parser.add_argument("-A", "--automate", help="automate server by time", action="store_true")
+    parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
+    parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
+    parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
+    parser.add_argument("-N", "--build_1", help="build log database", action="store_true")
+    parser.add_argument("-O", "--build_2", help="build server database from log database", action="store_true")
+    parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
+    parser.add_argument("-R", "--report", help="create visual report", action="store_true")
+    parser.add_argument("-S", "--set", help="set workspace directories", action="store_true")
+    parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
 
     args = parser.parse_args()
 
-    # LivingsdocsApi: creating database "-L"
+    # Workspace settings: creating directories "-S"
 
-    li = Liv.LivingDocs()
-    li.initiate_paths(log_file_path="/home/blz/Desktop/output/sources4.csv",
-                      source_path='/home/blz/Desktop/1/', target_path='/home/blz/Desktop/2/',
-                      output_directory="/home/blz/Desktop/output/")
+    workspace_path = os.getcwd()
+    path_data = workspace_path + "/data/"
+    path_data_1 = workspace_path + "/data/1/"
+    path_data_2 = workspace_path + "/data/2/"
+    path_data_output = workspace_path + "/data/output/"
+    path_data_output_models = workspace_path + "/data/output/models/"
+
+    if args.set:
+
+        os.mkdir(path_data)
+        os.mkdir(path_data_1)
+        os.mkdir(path_data_2)
+        os.mkdir(path_data_output)
+        os.mkdir(path_data_output_models)
+
+    li = Liv.LivingDocs(path_data_1, path_data_2, path_data_output)
+    li.initiate_paths(log_file_path=path_data_output + "/sources4.csv",
+                      source_path=path_data_1, target_path=path_data_2,
+                      output_path=path_data_output)
+
+    # build_1: build log database -N.
+    if args.build_1:
+        li.create_new_sources_file('sources')
+
+    # build_2: build database from log file -O.
+    if args.build_2:
+        li.get_articles_from_server()
+        li.transform()
+        li.sql_transform("sqldatabase.db")
+
+    # LivingsdocsApi: creating database "-L"
 
     if args.livingdocs:
         li.update_server()
@@ -52,17 +83,17 @@ def main():
 
     # Web Scrapping "-B"
 
-    blz_scrapper = scrapper.WebScrapper()
+    blz_scrapper = scrapper.WebScrapper(path_data_output)
 
     if args.blz:
         df = blz_scrapper.create_df(save=True)
 
     else:
         # load an existing web scrapping data frame.
-        df = blz_scrapper.load_data_frame()
+        df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
 
     # Modeling (w2v model) "-M"
-    model = w2v.W2V(li.sql_path, models_directory="/home/blz/Desktop/output/models")
+    model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
     # create a new model with parameters: embedding size, window size, min count, workers.
     if args.fit:
