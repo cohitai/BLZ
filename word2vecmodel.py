@@ -25,7 +25,7 @@ class W2V:
         self.models_directory = models_directory
         self.model_name = None
         self.model_path = None
-        self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
+        # self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
         self.epochs = None
 
     def load_model(self):
@@ -49,13 +49,13 @@ class W2V:
         return sorted(model_list, key=lambda d: int(
             time.mktime(time.strptime(d.split("_")[-1][:-6], "%Y-%m-%d-%H:%M:%S"))))[-1]
 
-    @staticmethod
-    def _get_header(cur):
+    #@staticmethod
+    #def _get_header(cur):
 
-        """method extracts header from Livingdocs_articles."""
+    #    """method extracts header from Livingdocs_articles."""
 
-        cur.execute("SELECT * FROM Livingdocs_articles LIMIT 1;")
-        return [x[0] for x in cur.description]
+    #   cur.execute("SELECT * FROM Livingdocs_articles LIMIT 1;")
+    #    return [x[0] for x in cur.description]
 
     @staticmethod
     def _zip_results(header, tup):
@@ -145,10 +145,10 @@ class W2V:
             self.model.train(sent_ite_train, total_examples=l5, epochs=1)
 
         # train over Digas' directory
-        print("training phase 2: ")
-        for path in glob.glob(self.directory + "*.txt"):
-            sentences = pp.clean_text(path)
-            self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
+        # print("training phase 2: ")
+        # for path in glob.glob(self.directory + "*.txt"):
+        #    sentences = pp.clean_text(path)
+        #    self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
 
         # save to file
         self.model.save(self.model_path)
