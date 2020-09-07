@@ -26,6 +26,8 @@ class W2V:
         self.model_name = None
         self.model_path = None
         # self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
+        self.path_to_digas = "/data/output/sql_digas"
+
         self.epochs = None
 
     def load_model(self):
@@ -149,6 +151,15 @@ class W2V:
         # for path in glob.glob(self.directory + "*.txt"):
         #    sentences = pp.clean_text(path)
         #    self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
+
+
+        # sql digas
+        # conn = sqlite3.connect(self.path_to_digas)
+        # c = conn.cursor()
+        # c.execute("select sentence from digas order by id")
+        # l = c.fetchall()
+        # list_of_lists = [elem[0].split(" ") for elem in l]
+        # self.model.train(list_of_lists, total_examples=len(list_of_lists), epochs=3)
 
         # save to file
         self.model.save(self.model_path)
