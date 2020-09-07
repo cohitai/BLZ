@@ -152,16 +152,30 @@ def main():
         # url = "http://localhost/uploader"
         # url = "http://34.123.40.94/uploader"
         url = "https://www.apiblzapp.tk/uploader"
+        cnt = 0
         while True:
+            sim.word_vectors = model.model.wv
             sim.df = blz_scrapper.create_df(save=True)
             sim.add_average_vector()
             pickle.dump(sim.predict(k=5), open(li.output_path + "/" + 'model.pkl', 'wb'))
             files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
             r = requests.post(url, files=files)
             print(r.text)
+            cnt += 1
+            if not cnt % 10:
+                # update the server:
+                li.update_server()
+                li.transform()
+                li.sql_transform("sqldatabase.db")
+                # set the counter:
+                cnt = 0
+                # fit a model:
+                model.fit(500, 20, 10, 4)
+                # create a json file for prediction:
+                pickle.dump(sim.predict(k=5), open(li.output_path + "/" + 'model.pkl', 'wb'))
+
             print("going to sleep...")
             time.sleep(3000)
-
 
 if __name__ == "__main__":
     main()
