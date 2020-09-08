@@ -27,7 +27,10 @@ class WebScrapper:
             topic_list.append(link.get('href'))
         complete_link_list = [self.url + x for x in topic_list]
 
-        return list(zip(topic_list, complete_link_list))
+        l = list(zip(topic_list, complete_link_list))
+        l.append(tuple(('/news', 'https://www.berliner-zeitung.de/news')))
+        return l
+        # return list(zip(topic_list, complete_link_list))
 
     def _get_all_links(self, categories_and_links):
 
