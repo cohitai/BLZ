@@ -346,7 +346,7 @@ class LivingDocs:
         else:
             after = self.update_log_file()
 
-        print("updating database, starting at DocId  = ", after)
+        print("updating database, starting at event id  = ", after)
 
         #
         d = self.create_files_database()
