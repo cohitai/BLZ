@@ -85,8 +85,12 @@ def main():
     if args.blz:
         df = blz_scrapper.create_df(save=True)
     else:
-        # load an existing web scrapping data frame.
-        df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
+        try:
+            # load an existing web scrapping data frame.
+            df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
+        except FileNotFoundError:
+            df = blz_scrapper.create_df(save=True)
+
 
     # Modeling (w2v model) "-M"
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
