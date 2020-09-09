@@ -48,6 +48,9 @@ class LivingDocs:
         if kwargs.get('output_path', None):
             self.output_path = kwargs.get('output_path', None)
 
+        if kwargs.get('sql_path', None):
+            self.sql_path = kwargs.get('sql_path', None)
+
     def _retrieve_logs(self, pub_event_id):
 
         """method to retrieve logs rows from the server

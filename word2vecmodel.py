@@ -7,6 +7,7 @@ from gensim.models import Word2Vec
 import sys
 import time
 import logging
+import os
 
 csv.field_size_limit(sys.maxsize)
 
@@ -36,6 +37,7 @@ class W2V:
 
         self.model_path = self._locate_last_model(self.models_directory)
         self.model = Word2Vec.load(self.model_path)
+        self.model_name = os.path.basename(self.model_path).split(".")[0]
 
     @staticmethod
     def _locate_last_model(path):
