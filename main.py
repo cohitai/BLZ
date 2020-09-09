@@ -22,8 +22,6 @@ import os
         6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
 
 
-
-
 def main():
 
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
@@ -84,10 +82,8 @@ def main():
     # Web Scrapping "-B"
 
     blz_scrapper = scrapper.WebScrapper(path_data_output)
-
     if args.blz:
         df = blz_scrapper.create_df(save=True)
-
     else:
         # load an existing web scrapping data frame.
         df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
@@ -109,10 +105,10 @@ def main():
     sim.add_average_vector()
 
     if args.predict:
-        print(sim.predict(k=5))
+        print(sim.predict(k=6))
 
         # pickling
-        pickle.dump(sim.predict(k=5), open(li.output_path+"/"+'model.pkl', 'wb'))
+        pickle.dump(sim.predict(k=6), open(li.output_path+"/"+'model.pkl', 'wb'))
 
         # model = pickle.load(open(li.output_path+"/"+'model.pkl', 'rb'))
 
@@ -150,26 +146,23 @@ def main():
     if args.automate:
         print("Starting automation:")
         # url = "http://localhost/uploader"
-        # url = "http://34.123.40.94/uploader"
         url = "https://www.apiblzapp.tk/uploader"
-        cnt = 0
+        cnt = 1
         while True:
             if not cnt % 10:
                 # update the server:
                 li.update_server()
                 li.transform()
                 li.sql_transform("sqldatabase.db")
-                # set the counter:
                 # fit a model:
                 model.fit(500, 20, 10, 4)
-                model.load_model()
-                # create a json file for prediction:
-                # pickle.dump(sim.predict(k=5), open(li.output_path + "/" + 'model.pkl', 'wb'))
+                # model.load_model()
 
             sim.word_vectors = model.model.wv
             sim.df = blz_scrapper.create_df(save=True)
             sim.add_average_vector()
-            pickle.dump(sim.predict(k=5), open(li.output_path + "/" + 'model.pkl', 'wb'))
+            # create a json file for prediction
+            pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
             files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
             r = requests.post(url, files=files)
             print(r.text)
