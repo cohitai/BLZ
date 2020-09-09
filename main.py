@@ -28,6 +28,7 @@ def main():
     parser.add_argument("-A", "--automate", help="automate server by time", action="store_true")
     parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
+    parser.add_argument("-LL", "--livingdocs_1", help="update server from id",  nargs='+', type=int)
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
     parser.add_argument("-N", "--build_1", help="build log database", action="store_true")
     parser.add_argument("-O", "--build_2", help="build server database from log database", action="store_true")
@@ -79,6 +80,13 @@ def main():
     else:
         li.sql_path = li.output_path+"sqldatabase.db"
 
+
+    if args.livingdocs_1:
+        li.update_server(args.livingdocs_1[0])
+        li.transform()
+        li.sql_transform("sqldatabase.db")
+
+
     # Web Scrapping "-B"
 
     blz_scrapper = scrapper.WebScrapper(path_data_output)
@@ -90,7 +98,6 @@ def main():
             df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
         except FileNotFoundError:
             df = blz_scrapper.create_df(save=True)
-
 
     # Modeling (w2v model) "-M"
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
