@@ -56,7 +56,7 @@ def main():
         os.mkdir(path_data_output_models)
 
     li = Liv.LivingDocs(path_data_1, path_data_2, path_data_output)
-    li.initiate_paths(log_file_path=path_data_output + "/sources4.csv",
+    li.initiate_paths(log_file_path=path_data_output + "/sources.csv",
                       source_path=path_data_1, target_path=path_data_2,
                       output_path=path_data_output)
 
