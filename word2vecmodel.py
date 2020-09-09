@@ -3,6 +3,7 @@ import csv
 import glob
 import preprocessing as pp
 import nltk
+nltk.download("punkt")
 from gensim.models import Word2Vec
 import sys
 import time
