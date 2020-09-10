@@ -401,6 +401,10 @@ class LivingDocs:
 
                 i += 1
 
+                #
+                if item is None:
+                    continue
+
                 try:
                     print(item["livingdoc"].keys())
                     print(i)
