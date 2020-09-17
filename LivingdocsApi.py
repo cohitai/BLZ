@@ -708,7 +708,6 @@ class LivingDocs:
                                                         {3} text,
                                                         {4} text,
                                                         {5} text 
-                                                        FOREIGN KEY ({0})
                                                         REFERENCES Livingdocs_articles ({0})     
                                                     );""".format(*list(header_dict.values()))
 
