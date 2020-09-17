@@ -656,7 +656,7 @@ class LivingDocs:
 
         with open(self.log_file, 'r') as fin:
             # csv.DictReader uses first line in file for column headings by default
-            dr = csv.DictReader(fin) # comma is default delimiter
+            dr = csv.DictReader(fin)  # comma is default delimiter
             to_db = [(i['id'], i['documentId'], i['documentType'], i['createdAt'], i['eventType'], i['publicationId'], i['contentType']) for i in dr]
 
         cur = conn.cursor()
@@ -691,5 +691,55 @@ class LivingDocs:
                 to_db = [(i['documentId'], i['section'], i['title'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
                 cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?);", to_db)
                 conn.commit()
+
+
+        #### Livingdocs images
+
+        header_dict = {"systemdata.documentId": "documentid", "metadata.category.path": "section",
+                       "metadata.title": "title", 'metadata.publishDate': "publishdate",
+                       "metadata.teaserImage.url": "picture", "systemdata.documentType": "type"}
+
+
+
+        sql_create_Livingdocs_images_table = """CREATE TABLE IF NOT EXISTS Livingdocs_images (
+                                                        {0} integer PRIMARY KEY,
+                                                        {1} text,
+                                                        {2} text,
+                                                        {3} text,
+                                                        {4} text,
+                                                        {5} text 
+                                                        FOREIGN KEY ({0})
+                                                        REFERENCES Livingdocs_articles ({0})     
+                                                    );""".format(*list(header_dict.values()))
+
+        if conn is not None:
+            # create Livingdocs_images table
+            self._create_table(conn, sql_create_Livingdocs_images_table)
+
+        l2 = []
+        for f_path in sorted_list:
+            with open(f_path) as f:
+                l1 = next(csv.reader(f))
+                if 'metadata.teaserImage.url' in l1:
+                    l2.append(f_path)
+
+        for file_path in l2:
+            with open(file_path, 'r') as file:
+                dr = csv.DictReader(file)  # comma is default delimiter
+                to_db = [(i['systemdata.documentId'], i['metadata.category.path'], i['metadata.teaserImage.url'],
+                          i['metadata.publishDate'], i['metadata.title']) for i in dr]
+                to_db_red = [x for x in to_db if x[2] != '']
+                cur.executemany(
+                    "INSERT INTO Livingdocs_images (documentid,section,picture,publishdate,title) VALUES (?,?,?,?,?);",
+                    to_db_red)
+                conn.commit()
+
+
+
+
+
+
+
+
         self.sql_path = self.output_path+file_name
         conn.close()

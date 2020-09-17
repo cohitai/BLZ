@@ -80,12 +80,10 @@ def main():
     else:
         li.sql_path = li.output_path+"sqldatabase.db"
 
-
     if args.livingdocs_1:
         li.update_server(args.livingdocs_1[0])
         li.transform()
         li.sql_transform("sqldatabase.db")
-
 
     # Web Scrapping "-B"
 
