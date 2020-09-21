@@ -715,7 +715,9 @@ class LivingDocs:
             # create Livingdocs_images table
             self._create_table(conn, sql_create_Livingdocs_images_table)
 
+        sorted_list = sorted(glob.glob(self.source + "*.csv"), key=lambda x: int(x.split('_')[-1][:-4]))
         l2 = []
+
         for f_path in sorted_list:
             with open(f_path) as f:
                 l1 = next(csv.reader(f))
@@ -726,18 +728,12 @@ class LivingDocs:
             with open(file_path, 'r') as file:
                 dr = csv.DictReader(file)  # comma is default delimiter
                 to_db = [(i['systemdata.documentId'], i['metadata.category.path'], i['metadata.teaserImage.url'],
-                          i['metadata.publishDate'], i['metadata.title']) for i in dr]
+                          i['metadata.publishDate'], i['metadata.title'], i["systemdata.documentType"]) for i in dr]
                 to_db_red = [x for x in to_db if x[2] != '']
                 cur.executemany(
-                    "INSERT INTO Livingdocs_images (documentid,section,picture,publishdate,title) VALUES (?,?,?,?,?);",
+                    "INSERT INTO Livingdocs_images (documentid,section,picture,publishdate,title,type) VALUES (?,?,?,?,?,?);",
                     to_db_red)
                 conn.commit()
-
-
-
-
-
-
 
 
         self.sql_path = self.output_path+file_name

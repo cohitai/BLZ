@@ -158,7 +158,7 @@ def main():
         url = "https://www.apiblzapp.tk/uploader"
         cnt = 1
         while True:
-            if not cnt % 10:
+            if not cnt % 50:
                 # update the server:
                 li.update_server()
                 li.transform()
