@@ -444,8 +444,6 @@ class LivingDocs:
             print("updating DocumentId:", DocId)
             #
             file = self.match_file_to_docid(d, DocId)
-            #print(d)
-            #print(file)
             df1 = pd.read_csv(file)
             item = self.extract_doc(DocId)
             i += 1
@@ -582,7 +580,12 @@ class LivingDocs:
         print(len(deleted_articles))
         d = self.create_files_database()
 
+        # resolve the 'republish' bug
+        df_logs = pd.read_csv(self.log_file)
         for i in range(len(deleted_articles)):
+            if df_logs['eventType'].loc[df_logs['documentId'] == deleted_articles[i]].to_list()[-1] == 'publish':
+                continue
+
             current_path = self.match_file_to_docid(d, deleted_articles[i])
             print(deleted_articles[i], ":", current_path)
             if current_path:
