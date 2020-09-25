@@ -253,6 +253,8 @@ class LivingDocs:
         try:
             return d.query('pre <= {0} & post >= {0}'.format(doc_id))["file"].to_list()[0]
         except IndexError:
+            return d.query('post <= {0}'.format(doc_id))["file"].to_list()[-1]
+        except IndexError:
             return None
 
     def sizes_list(self, a, b):
@@ -442,6 +444,8 @@ class LivingDocs:
             print("updating DocumentId:", DocId)
             #
             file = self.match_file_to_docid(d, DocId)
+            #print(d)
+            #print(file)
             df1 = pd.read_csv(file)
             item = self.extract_doc(DocId)
             i += 1
