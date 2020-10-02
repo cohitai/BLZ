@@ -107,7 +107,7 @@ class LivingDocs:
                     time.sleep(30)
                     pause_counter = 0
 
-                print(pub_event_id)
+                logging.info("pub_event_id: {0}".format(pub_event_id))
 
         if replace:
             self.log_file = path
@@ -303,15 +303,15 @@ class LivingDocs:
             i += 1
 
             try:
-                print(item["livingdoc"].keys())
-                print(i)
+                logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                logging.info("loop number {0}: ".format(i))
                 df2 = pd.DataFrame(pd.json_normalize(item))
                 df1 = df1.append(df2, ignore_index=True, sort=False)
 
             except ConnectionError:
                 time.sleep(60)
-                print(item["livingdoc"].keys())
-                print(i)
+                logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                logging.info("loop number {0}: ".format(i))
                 df2 = pd.DataFrame(pd.json_normalize(item))
                 df1 = df1.append(df2, ignore_index=True, sort=False)
 
@@ -349,14 +349,14 @@ class LivingDocs:
         else:
             after = self.update_log_file()
 
-        print("updating database, starting at event id  = {0}".format(after))
+        logging.info("updating database, starting at event id  = {0}".format(after))
 
         #
         d = self.create_files_database()
 
         # exclude empty source directory case
         if d.shape == (0, 0):
-            print("directory:", self.source, "is empty, consider using get_articles_from_server instead")
+            logging.info("directory: {0} is empty, consider using get_articles_from_server instead".format(self.source))
             return
         
         df = pd.read_csv(self.log_file)
@@ -409,15 +409,15 @@ class LivingDocs:
                     continue
 
                 try:
-                    print(item["livingdoc"].keys())
-                    print(i)
+                    logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                    logging.info("loop number {0}: ".format(i))
                     df2 = pd.DataFrame(pd.json_normalize(item))
                     df1 = df1.append(df2, ignore_index=True, sort=False)
 
                 except ConnectionError:
                     time.sleep(60)
-                    print(item["livingdoc"].keys())
-                    print(i)
+                    logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                    logging.info("loop number {0}: ".format(i))
                     df2 = pd.DataFrame(pd.json_normalize(item))
                     df1 = df1.append(df2, ignore_index=True, sort=False)
                 except KeyError:
@@ -450,15 +450,15 @@ class LivingDocs:
             i += 1
 
             try:
-                print(item["livingdoc"].keys())
-                print(i)
+                logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                logging.info("loop number {0}: ".format(i))
                 df2 = pd.DataFrame(pd.json_normalize(item))
                 df1 = df1.append(df2, ignore_index=True, sort=False)
 
             except ConnectionError:
                 time.sleep(60)
-                print(item["livingdoc"].keys())
-                print(i)
+                logging.info("current entry keys: {0}".format(item["livingdoc"].keys()))
+                logging.info("loop number {0}: ".format(i))
                 df2 = pd.DataFrame(pd.json_normalize(item))
                 df1 = df1.append(df2, ignore_index=True, sort=False)
 
@@ -588,7 +588,7 @@ class LivingDocs:
                 continue
 
             current_path = self.match_file_to_docid(d, deleted_articles[i])
-            print(deleted_articles[i], ":", current_path)
+            logging.info("{0}:{1}".format(deleted_articles[i], current_path))
             if current_path:
                 df = pd.read_csv(current_path)
                 if deleted_articles[i] in df["systemdata.documentId"].tolist():
@@ -623,7 +623,7 @@ class LivingDocs:
             c = conn.cursor()
             c.execute(create_table_sql)
         except Error as e:
-            print(e)
+            logging.info(e)
 
     def sql_transform(self, file_name):
         """
@@ -636,7 +636,7 @@ class LivingDocs:
         # overwrite an existing file
         if os.path.exists(path):
             os.remove(path)
-            print("file at: ", path, "already exists! deleting file...")
+            logging.info("file at: {0} already exists! deleting file...".format(path))
 
         conn = self._create_connection(path)
         with open(self.log_file, 'r') as csvfile:

@@ -117,7 +117,6 @@ class Similarity:
     def predict(self, k):
         """:param k: number of predictions
            :return a dictionary"""
-        # print(self.docid_url_dict())
         return {self.i2docid(i): [self.docid_url_dict()[self.i2docid(tup[0])] for tup in self.find_similar_article(i, k)][::-1] for i in range(self.df.shape[0]) }
 
     def i2docid(self, i):

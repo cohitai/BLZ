@@ -1,3 +1,4 @@
+import logging
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -98,7 +99,7 @@ class WebScrapper:
 
         # saving df as a csv file.
         if save:
-            print("saving web scrapping file at:", self.output_path)
+            logging.info("saving web scrapping file at:{0}".format(self.output_path))
             df.to_csv(self.output_path + "df.csv")
 
         return df

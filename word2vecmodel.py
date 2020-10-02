@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 import csv
 import glob
@@ -135,8 +136,8 @@ class W2V:
         self.model.build_vocab(sent_ite_vocabulary)
 
         # train over LivingDocs
-        print("training algorithm in two phases: LivingDocs database, Digas database.")
-        print("training phase 1: ")
+        logging.info("training algorithm in two phases: LivingDocs database, Digas database.")
+        logging.info("training phase 1: ")
         for i in range(self.epochs):
             sent_ite_train = iter(self.SentIterator(header, cur, sql_query_3))
             self.model.train(sent_ite_train, total_examples=l3, epochs=1)

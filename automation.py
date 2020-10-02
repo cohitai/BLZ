@@ -29,8 +29,8 @@ class AutoServer:
             pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
             files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
             r = requests.post(self.server_name+"/uploader", files=files)
-            print(r.text)
+            logging.info(r.text)
 
             cnt += 1
-            print("going to sleep...")
+            logging.info("going to sleep...")
             time.sleep(3000)
