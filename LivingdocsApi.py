@@ -1,3 +1,4 @@
+import logging
 import requests
 import logging
 import json
@@ -110,8 +111,8 @@ class LivingDocs:
 
         if replace:
             self.log_file = path
-            print("log_file written to:", self.log_file)
-            print("last publication event:", pub_event_id)
+            logging.info("log_file written to {0}:".format(self.log_file))
+            logging.info("last publication event: {0}".format(pub_event_id))
 
     def update_log_file(self, path=None):
 
@@ -124,14 +125,14 @@ class LivingDocs:
         if not path:
             path = self.log_file
 
-        print("log file is updated at:", path)
+        logging.info("log file is updated at:{0}".format(path))
 
         with open(path, 'r') as f:
 
             # the last id number of a retrieved row in the file.
 
             n = int(next(reversed(list(csv.reader(f))))[0])
-            print("Last id documented:", n)
+            logging.info("Last id documented:{0}".format(n))
 
         with open(path, 'a') as file:
 
@@ -153,7 +154,7 @@ class LivingDocs:
 
         with open(path, 'r') as f:
 
-            print("new last id documented:", int(next(reversed(list(csv.reader(f))))[0]))
+            logging.info("new last id documented: {0}".format(int(next(reversed(list(csv.reader(f))))[0])))
 
         return n
 
@@ -330,7 +331,7 @@ class LivingDocs:
             df1.to_csv(self.source + "Livingsdoc_" + str(label) + ".csv", encoding='utf-8', index=False)
 
         self.status_id = self.get_last_row(self.log_file)[0]
-        print("Current status of the server:", self.status_id)
+        logging.info("Current status of the server:{0}".format(self.status_id))
 
         ####
 
@@ -348,7 +349,7 @@ class LivingDocs:
         else:
             after = self.update_log_file()
 
-        print("updating database, starting at event id  = ", after)
+        print("updating database, starting at event id  = {0}".format(after))
 
         #
         d = self.create_files_database()
@@ -369,7 +370,7 @@ class LivingDocs:
 
         n = int(d["post"][-1:])
 
-        print("last document in the database:", n)
+        logging.info("last document in the database: {0}".format(n))
         #
         mask = df_re['documentId'] > n
 
@@ -381,7 +382,7 @@ class LivingDocs:
         # appending new docs
 
         #
-        print("updating new documents")
+        logging.info("updating new documents")
         #
         articles = sorted(set(df_up) - deleted_articles)
 
@@ -391,7 +392,7 @@ class LivingDocs:
 
         while l:
 
-            print(l)
+            logging.info("{0}".format(l))
             x = l.pop(0)
             articles_x = articles[0:x]
             articles = articles[x:]
@@ -433,7 +434,7 @@ class LivingDocs:
         # updating old docs
 
         #
-        print("Updating old documents:")
+        logging.info("Updating old documents:")
         #
         l_do = df_do.tolist()
         i = 0
@@ -441,7 +442,7 @@ class LivingDocs:
 
         for DocId in l_do:
             #
-            print("updating DocumentId:", DocId)
+            logging.info("updating DocumentId:{0}".format(DocId))
             #
             file = self.match_file_to_docid(d, DocId)
             df1 = pd.read_csv(file)
@@ -467,18 +468,18 @@ class LivingDocs:
             df1 = df1.drop_duplicates(subset='systemdata.documentId', keep="last")
             df1 = df1.sort_values("systemdata.documentId", axis=0)
             #
-            print("updating file:", file)
+            logging.info("updating file:{0}".format(file))
             #
             df1.to_csv(file, encoding='utf-8', index=False)
 
             ####
 
         self.status_id = self.get_last_row(self.log_file)[0]
-        print("Current status of the server:", self.status_id)
+        logging.info("Current status of the server:{0}".format(self.status_id))
 
         ####
 
-        current_time = str(time.time())
+        # current_time = str(time.time())
 
         # with open(self.output_path + 'status_{0}.txt'.format(current_time), 'w') as f:
             # f.write(self.status_id)
@@ -577,7 +578,7 @@ class LivingDocs:
         """method removes articles with if an unpublished event exists in log"""
 
         deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
-        print(len(deleted_articles))
+        logging.info("There are {0} unpublished articles".format(len(deleted_articles)))
         d = self.create_files_database()
 
         # resolve the 'republish' bug
@@ -594,7 +595,7 @@ class LivingDocs:
                     indexname = df[(df['systemdata.documentId'] == deleted_articles[i])].index
                     df.drop(indexname, inplace=True)
                     df.to_csv(current_path, index=False)
-                    print("a drop is made:", current_path)
+                    logging.info("a drop is made:{0}".format(current_path))
 
     @staticmethod
     def _create_connection(path):
@@ -604,8 +605,8 @@ class LivingDocs:
 
         try:
             connection = sqlite3.connect(path)
-            print("Connection to SQLite DB successful")
-            print("SQL database was created at:", path)
+            logging.info("Connection to SQLite DB successful")
+            logging.info("SQL database was created at: {0}".format(path))
         except Error as e:
             print(f"The error '{e}' occurred")
 

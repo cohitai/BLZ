@@ -1,3 +1,7 @@
+import logging
+import sys
+logging.basicConfig(stream=sys.stdout, filemode='a', level=logging.INFO)
+
 import webscrapper as scrapper
 import LivingdocsApi as Liv
 import word2vecmodel as w2v
@@ -27,6 +31,7 @@ def main():
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
     parser.add_argument("-A", "--automate", help="automate server by time", action="store_true")
     parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
+    parser.add_argument("-D", "--server_name", help="initiate domain name", nargs='+', type=str)
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
     parser.add_argument("-LL", "--livingdocs_1", help="update server from id",  nargs='+', type=int)
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
@@ -38,7 +43,10 @@ def main():
     parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
 
     args = parser.parse_args()
-
+    # Workspace server_name
+    if args.server_name:
+        server_url = args.server_name[0]
+        logging.info("server name:{0}".format(1))
     # Workspace settings: creating directories "-S"
 
     workspace_path = os.getcwd()
@@ -114,7 +122,7 @@ def main():
     sim.add_average_vector()
 
     if args.predict:
-        print(sim.predict(k=6))
+        logging.info(sim.predict(k=6))
 
         # pickling
         pickle.dump(sim.predict(k=6), open(li.output_path+"/"+'model.pkl', 'wb'))
@@ -153,8 +161,7 @@ def main():
     # print(sim.predict(k=5))
 
     if args.automate:
-        print("Starting automation:")
-        # url = "http://localhost/uploader"
+        logging.info("Starting automation:")
         url = "https://www.apiblzapp.tk/uploader"
         cnt = 1
         while True:
@@ -174,10 +181,10 @@ def main():
             pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
             files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
             r = requests.post(url, files=files)
-            print(r.text)
+            logging.info(r.text)
 
             cnt += 1
-            print("going to sleep...")
+            logging.info("going to sleep...")
             time.sleep(3000)
 
 
