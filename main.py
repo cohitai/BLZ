@@ -47,7 +47,7 @@ def main():
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
     else:
-        server_url = "http://www.apiblzapp.ml"
+        server_url = "https://www.apiblzapp.tk"
 
     logging.info("Server Name is set to: {0}".format(server_url))
 
@@ -162,34 +162,6 @@ def main():
 
         automation = aut.AutoServer(server_url, li, model, sim, blz_scrapper)
         automation.automate(t=3000, s=50)
-
-
-        #logging.info("Starting automation:")
-        #url = "https://www.apiblzapp.tk/uploader"
-        #cnt = 1
-        #while True:
-            #if not cnt % 50:
-                # update the server:
-                #li.update_server()
-                #li.transform()
-                #li.sql_transform("sqldatabase.db")
-                # fit a model:
-                #model.fit(500, 20, 10, 4)
-                # model.load_model()
-
-            #sim.word_vectors = model.model.wv
-            #sim.df = blz_scrapper.create_df(save=True)
-            #sim.add_average_vector()
-
-            # create a json file for prediction
-            #pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
-            #files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
-            #r = requests.post(url, files=files)
-            #logging.info(r.text)
-
-            #cnt += 1
-            #logging.info("going to sleep...")
-            #time.sleep(3000)
 
 
 if __name__ == "__main__":
