@@ -1,4 +1,3 @@
-import logging
 import requests
 import logging
 import json
@@ -14,7 +13,7 @@ from sqlite3 import Error
 import sys
 import os
 csv.field_size_limit(sys.maxsize)
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 class LivingDocs:
@@ -575,7 +574,7 @@ class LivingDocs:
 
     def _remove_deleted(self):
 
-        """method removes articles with if an unpublished event exists in log"""
+        """method removes articles if an unpublished event exists in log"""
 
         deleted_articles = sorted(set(self.crop_query(pd.read_csv(self.log_file), unpublish=True)["documentId"]))
         logging.info("There are {0} unpublished articles".format(len(deleted_articles)))
@@ -588,7 +587,7 @@ class LivingDocs:
                 continue
 
             current_path = self.match_file_to_docid(d, deleted_articles[i])
-            logging.info("{0}:{1}".format(deleted_articles[i], current_path))
+            logging.info("UNPUBLISHED: {0}:{1}".format(deleted_articles[i], current_path))
             if current_path:
                 df = pd.read_csv(current_path)
                 if deleted_articles[i] in df["systemdata.documentId"].tolist():

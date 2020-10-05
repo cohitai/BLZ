@@ -47,6 +47,7 @@ def main():
     if args.server_name:
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
+
     # Workspace settings: creating directories "-S"
 
     workspace_path = os.getcwd()
@@ -70,6 +71,7 @@ def main():
                       output_path=path_data_output)
 
     # build_1: build log database -N.
+
     if args.build_1:
         li.create_new_sources_file('sources')
 

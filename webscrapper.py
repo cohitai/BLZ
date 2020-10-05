@@ -99,13 +99,13 @@ class WebScrapper:
 
         # saving df as a csv file.
         if save:
-            logging.info("saving web scrapping file at:{0}".format(self.output_path))
+            logging.info("web scrapping is successful, file saved at:{0}".format(self.output_path))
             df.to_csv(self.output_path + "df.csv")
 
         return df
 
     @staticmethod
-    def load_data_frame(path="/home/blz/Desktop/output/df.csv"):
+    def load_data_frame(path):
 
         """function loads an existing data frame."""
 

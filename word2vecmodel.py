@@ -8,7 +8,6 @@ nltk.download("punkt")
 from gensim.models import Word2Vec
 import sys
 import time
-import logging
 import os
 
 csv.field_size_limit(sys.maxsize)
