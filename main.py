@@ -1,16 +1,14 @@
 import logging
 import sys
 logging.basicConfig(stream=sys.stdout, filemode='a', level=logging.INFO)
-
 import webscrapper as scrapper
 import LivingdocsApi as Liv
 import word2vecmodel as w2v
 import similarity_functions as aux
 import visualization as vis
+import automation as aut
 import argparse
 import pickle
-import requests
-import time
 import os
 
 """ Web- application for Berliner-Zeitung: 
@@ -43,10 +41,15 @@ def main():
     parser.add_argument("-V", "--visualization", help="show visual report", action="store_true")
 
     args = parser.parse_args()
+
     # Workspace server_name
     if args.server_name:
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
+    else:
+        server_url = "http://www.apiblzapp.ml"
+
+    logging.info("Server Name is set to: {0}".format(server_url))
 
     # Workspace settings: creating directories "-S"
 
@@ -107,10 +110,11 @@ def main():
         except FileNotFoundError:
             df = blz_scrapper.create_df(save=True)
 
-    # Modeling (w2v model) "-M"
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
+    # Modeling (w2v model) "-M"
     # create a new model with parameters: embedding size, window size, min count, workers.
+
     if args.fit:
         model.fit(args.fit[0], args.fit[1], args.fit[2], args.fit[3])
     else:
@@ -153,41 +157,39 @@ def main():
         visualizer.plot_all_figures()
 
     #################
-    # print(sim.find_similar_article(111, 5))
-    # print(df["Title"][111])
-    # print(df["Title"][85])
-    # print(df["Title"][91])
-    # print(df["Title"][88])
-    # print(df["Title"][142])
-    # print(df["Title"][114])
-    # print(sim.predict(k=5))
 
     if args.automate:
-        logging.info("Starting automation:")
-        url = "https://www.apiblzapp.tk/uploader"
-        cnt = 1
-        while True:
-            if not cnt % 50:
+
+        automation = aut.AutoServer(server_url, li, model, sim, blz_scrapper)
+        automation.automate(t=3000, s=50)
+
+
+        #logging.info("Starting automation:")
+        #url = "https://www.apiblzapp.tk/uploader"
+        #cnt = 1
+        #while True:
+            #if not cnt % 50:
                 # update the server:
-                li.update_server()
-                li.transform()
-                li.sql_transform("sqldatabase.db")
+                #li.update_server()
+                #li.transform()
+                #li.sql_transform("sqldatabase.db")
                 # fit a model:
-                model.fit(500, 20, 10, 4)
+                #model.fit(500, 20, 10, 4)
                 # model.load_model()
 
-            sim.word_vectors = model.model.wv
-            sim.df = blz_scrapper.create_df(save=True)
-            sim.add_average_vector()
-            # create a json file for prediction
-            pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
-            files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
-            r = requests.post(url, files=files)
-            logging.info(r.text)
+            #sim.word_vectors = model.model.wv
+            #sim.df = blz_scrapper.create_df(save=True)
+            #sim.add_average_vector()
 
-            cnt += 1
-            logging.info("going to sleep...")
-            time.sleep(3000)
+            # create a json file for prediction
+            #pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
+            #files = {'file': open(li.output_path + "/" + 'model.pkl', 'rb')}
+            #r = requests.post(url, files=files)
+            #logging.info(r.text)
+
+            #cnt += 1
+            #logging.info("going to sleep...")
+            #time.sleep(3000)
 
 
 if __name__ == "__main__":
