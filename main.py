@@ -34,7 +34,7 @@ def main():
     parser.add_argument("-LL", "--livingdocs_1", help="update server from id",  nargs='+', type=int)
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
     parser.add_argument("-N", "--build_1", help="build log database", action="store_true")
-    parser.add_argument("-O", "--build_2", help="build server database from log database", action="store_true")
+    parser.add_argument("-O", "--build_2", help="build server database from log database", nargs='+', type=int)
     parser.add_argument("-P", "--predict", help="make a prediction", action="store_true")
     parser.add_argument("-R", "--report", help="create visual report", action="store_true")
     parser.add_argument("-S", "--set", help="set workspace directories", action="store_true")
@@ -80,7 +80,7 @@ def main():
 
     # build_2: build database from log file -O.
     if args.build_2:
-        li.get_articles_from_server()
+        li.get_articles_from_server(args.build_2[0])
         li.transform()
         li.sql_transform("sqldatabase.db")
 
