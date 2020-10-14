@@ -47,7 +47,7 @@ def main():
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
     else:
-        server_url = "http://www.apiblzapp.ml"
+        server_url = "https://www.apiblzapp.ml"
 
     logging.info("Server Name is set to: {0}".format(server_url))
 
@@ -156,7 +156,7 @@ def main():
 
         visualizer.plot_all_figures()
 
-    #################
+    ############
 
     if args.automate:
 
