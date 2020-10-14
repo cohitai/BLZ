@@ -16,7 +16,7 @@ class AutoServer:
 
     def automate(self, s, t):
         logging.info("Starting automation:")
-        #### "https://www.apiblzapp.tk/uploader"
+        # "https://www.apiblzapp.tk/uploader"
         cnt = 1
         while True:
             if not cnt % s:

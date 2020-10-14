@@ -6,9 +6,8 @@ from datetime import datetime
 import pandas as pd
 from itertools import groupby
 import os
+
 # Global variable: stop words from a file.
-
-
 
 stop_words_path = os.getcwd()+"/stopwords.txt"
 
