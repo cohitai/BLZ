@@ -16,12 +16,13 @@ import os
     consists of 6 objects/modules plus a main function to generates recommendations by similarity. 
     
     Units: 
-        1. webscrapper. generating a data frame from blz website. (Object)
-        2. preprocessing. (Module)
-        3. word2vecmodel. (Object)
-        4. similarity. (Object)
-        5. visualization. (Object)
-        6. LivingsdocsApi. (Object) download server of Livingdocs into an sql file. """
+        1. webscrapper.py generating a data frame from blz website. (Object)
+        2. preprocessing.py (Module)
+        3. word2vecmodel.py (Object)
+        4. similarity.py (Object)
+        5. visualization.py (Object)
+        6. LivingsdocsApi.py (Object) download server of Livingdocs into an sql file. 
+        7. automation.py (Object) automate the model uploading procedure. """
 
 
 def main():
