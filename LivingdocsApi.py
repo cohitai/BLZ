@@ -570,7 +570,7 @@ class LivingDocs:
             df[header].rename(columns={"systemdata.documentId": "documentId", "metadata.category.path": "section",
                                        "metadata.title": "title", 'metadata.publishDate': "publishDate",
                                        'metadata.language.label': "language"}).to_csv(
-                self.target + "Livingsdocs" + "_" + str(df["systemdata.documentId"][0]) + ".csv", index=False)
+                self.target + "Livingsdocs" + "_" + str(df["systemdata.documentId"].iloc[0]) + ".csv", index=False)
 
     def _remove_deleted(self):
 
