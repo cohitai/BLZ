@@ -341,7 +341,7 @@ class LivingDocs:
 
     def update_server(self, update_eventid=None):
 
-        """a method to update the server"""
+        """ a method to update the server from a given event id."""
 
         if update_eventid:
             after = update_eventid
@@ -487,6 +487,24 @@ class LivingDocs:
         self._remove_deleted()
 
     @staticmethod
+    def extract_text_from_livingdoc_obj(obj):
+        start = '\'text\': '
+        end = '}}'
+        ite = re.finditer(start, obj)
+        text_list = [tup.span()[1] for tup in ite]
+        text_list_1 = [obj[x: obj[x:].find(end) + x] for x in text_list]
+        text_list_2 = "\n".join(
+            [term.replace("<strong>", "").replace("</strong>", "").replace("<em>", "").replace("</em>", "") for term
+             in text_list_1])
+        try:
+            return text_list_2[re.search('[a-zA-Z]', text_list_2).span()[0]:]
+        except AttributeError:
+            return text_list_2
+
+
+
+
+    @staticmethod
     def json_to_text(obj):
 
         """recieves a str (obj) in a json structure ;
@@ -509,7 +527,7 @@ class LivingDocs:
     @staticmethod
     def make_consistent_text(desc, text):
 
-        """adding desc at the beginning of a text unless unnecessary."""
+        """adding desc in front of a text unless unnecessary."""
 
         try:
             if len(desc) < 10:
@@ -544,7 +562,7 @@ class LivingDocs:
 
         """ add the text and author columns. """
 
-        df['text'] = df['livingdoc.content'].apply(self.json_to_text)
+        df['text'] = df['livingdoc.content'].apply(self.extract_text_from_livingdoc_obj)
         df['text'] = df.apply(lambda row: self.make_consistent_text(row['metadata.description'], row['text']), axis=1)
         df['author'] = df['livingdoc.content'].apply(self.find_author)
         df['url'] = df['metadata.routing.path'].fillna('')
@@ -559,7 +577,7 @@ class LivingDocs:
 
     def transform(self):
 
-        header = ['systemdata.documentId', 'metadata.category.path', 'metadata.title',
+        header = ['systemdata.documentId', 'metadata.category.path', 'metadata.title', 'metadata.description',
                   'metadata.publishDate', 'metadata.language.label', 'text', 'author', 'url']
 
         sorted_list = self.create_sorted_list(self.source + "*.csv")
@@ -569,7 +587,7 @@ class LivingDocs:
             self.make_operations_on_columns(df)
             df[header].rename(columns={"systemdata.documentId": "documentId", "metadata.category.path": "section",
                                        "metadata.title": "title", 'metadata.publishDate': "publishDate",
-                                       'metadata.language.label': "language"}).to_csv(
+                                       'metadata.language.label': "language", 'metadata.description': "description"}).to_csv(
                 self.target + "Livingsdocs" + "_" + str(df["systemdata.documentId"].iloc[0]) + ".csv", index=False)
 
     def _remove_deleted(self):
@@ -685,7 +703,8 @@ class LivingDocs:
                                                 {4} text,
                                                 {5} text,
                                                 {6} text,
-                                                {7} text
+                                                {7} text,
+                                                {8} text
                                             );""".format(*l)
 
         if conn is not None:

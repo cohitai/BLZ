@@ -32,7 +32,7 @@ def main():
     parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
     parser.add_argument("-D", "--server_name", help="initiate domain name", nargs='+', type=str)
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
-    parser.add_argument("-LL", "--livingdocs_1", help="update server from id",  nargs='+', type=int)
+    parser.add_argument("-LL", "--livingdocs_1", help="update server from a given event id",  nargs='+', type=int)
     parser.add_argument("-M", "--fit", help="train the model", nargs='+', type=int)
     parser.add_argument("-N", "--build_1", help="build log database", action="store_true")
     parser.add_argument("-O", "--build_2", help="build server database from log database", nargs='+', type=int)
@@ -50,7 +50,7 @@ def main():
     else:
         server_url = "https://www.apiblzapp.ml"
 
-    logging.info("Server Name is set to: {0}".format(server_url))
+    logging.info("Server name is set to: {0}".format(server_url))
 
     # Workspace settings: creating directories "-S"
 
