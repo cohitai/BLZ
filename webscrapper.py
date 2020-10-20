@@ -95,18 +95,21 @@ class WebScrapper:
         """main method for scrapping"""
 
         url_list = self._get_all_links(self._get_main_categories())
-        df = pp.edit_data_frame(self._create_database(url_list))
-
+        df_new = pp.edit_data_frame(self._create_database(url_list))
         # saving df as a csv file.
         if save:
             logging.info("web scrapping is successful, file saved at:{0}".format(self.output_path))
-            df.to_csv(self.output_path + "df.csv")
+            df_new.to_csv(self.output_path + "df.csv")
+            df_new = pd.read_csv(self.output_path + "df.csv")
+            df_new.drop_duplicates(keep="last", inplace=True)
 
-        return df
+        return df_new
 
     @staticmethod
     def load_data_frame(path):
 
         """function loads an existing data frame."""
 
-        return pd.read_csv(path, index_col=0)
+        df = pd.read_csv(path, index_col=0)
+        df.drop_duplicates(keep="last", inplace=True)
+        return df

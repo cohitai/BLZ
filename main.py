@@ -99,6 +99,8 @@ def main():
         li.transform()
         li.sql_transform("sqldatabase.db")
 
+
+
     # Web Scrapping "-B"
 
     blz_scrapper = scrapper.WebScrapper(path_data_output)
@@ -110,6 +112,14 @@ def main():
             df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
         except FileNotFoundError:
             df = blz_scrapper.create_df(save=True)
+
+
+    ### merging df's - new section
+    #### Test: 10 last days df.
+
+        df_test = li.create_livingdocs_df(df["DocId"].to_list())
+
+
 
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
@@ -125,7 +135,7 @@ def main():
 
     # Similarity "-P"
     # instantiate similarity object from an existing model.
-    sim = aux.Similarity(model.model, df)
+    sim = aux.Similarity(model.model, df_test)
     sim.add_average_vector()
 
     if args.predict:

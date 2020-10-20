@@ -3,6 +3,7 @@ import logging
 import json
 import pandas as pd
 import time
+import nltk
 import glob
 from collections import deque
 import csv
@@ -12,6 +13,7 @@ import sqlite3
 from sqlite3 import Error
 import sys
 import os
+import preprocessing as pp
 csv.field_size_limit(sys.maxsize)
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -714,8 +716,8 @@ class LivingDocs:
         for file_path in sorted_list:
             with open(file_path, 'r') as file:
                 dr = csv.DictReader(file)  # comma is default delimiter
-                to_db = [(i['documentId'], i['section'], i['title'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
-                cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?);", to_db)
+                to_db = [(i['documentId'], i['section'], i['title'], i['description'], i['publishDate'], i['language'], i['text'], i['author'], i['url']) for i in dr]
+                cur.executemany("INSERT INTO Livingdocs_articles (documentId,section,title,description,publishDate,language,text,author,url) VALUES (?,?,?,?,?,?,?,?,?);", to_db)
                 conn.commit()
 
 
@@ -764,3 +766,31 @@ class LivingDocs:
 
         self.sql_path = self.output_path+file_name
         conn.close()
+
+
+    def create_livingdocs_df(self,list_website):
+
+        sql_query_last_10_days = """SELECT * FROM Livingdocs_articles WHERE publishdate BETWEEN datetime('now', '-10 days') AND datetime('now', '+1 days');"""
+        conn = sqlite3.connect(self.sql_path, check_same_thread=False)
+        cur = conn.cursor()
+        cur.execute(sql_query_last_10_days)
+        data = cur.fetchall()
+        df = pd.DataFrame(data,
+                          columns=['DocId', 'Section', 'Title','description', 'publishing_date', 'language', 'Text',
+                                   'Author', 'Url'])
+        list_livingdocs = df["DocId"].to_list()
+        l3 = [x for x in list_website if x not in list_livingdocs]
+        query = """SELECT * FROM Livingdocs_articles WHERE documentId IN ({seq});""".format(seq=','.join(['?'] * len(l3)))
+
+        cur.execute(query, l3)
+        data1 = cur.fetchall()
+        df_ap = pd.DataFrame(data1,
+                             columns=['DocId', 'Section', 'Title', 'description', 'publishing_date', 'language', 'Text',
+                                      'Author', 'Url'])
+
+        df2 = df.append(df_ap, ignore_index=True, sort=False)
+
+        df2["Full Text"] = df2["Title"] + df2["Text"]
+        df2["Tokenized_sents"] = df2["Full Text"].apply(nltk.sent_tokenize)
+        df2["Tokenized_sents"] = df2["Tokenized_sents"].apply(pp.clean_text_from_text)
+        return df2

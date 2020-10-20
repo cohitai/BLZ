@@ -31,7 +31,8 @@ class AutoServer:
             # model load
             self.similarity.word_vectors = self.model.model.wv
             # scrap the website
-            self.similarity.df = self.blz_scrapper.create_df(save=True)
+            df = self.blz_scrapper.create_df(save=True)
+            self.similarity.df = self.livingdocs.create_livingdocs_df(df["DocId"].to_list())
             self.similarity.add_average_vector()
             # create a json file for prediction
             pickle.dump(self.similarity.predict(k=6), open(self.livingdocs.output_path + "/" + 'model.pkl', 'wb'))
