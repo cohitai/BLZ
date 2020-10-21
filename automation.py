@@ -18,12 +18,12 @@ class AutoServer:
         logging.info("Starting automation:")
         # "https://www.apiblzapp.tk/uploader"
         cnt = 1
+        # update the server:
+        self.livingdocs.update_server()
+        self.livingdocs.transform()
+        self.livingdocs.sql_transform("sqldatabase.db")
         while True:
             if not cnt % s:
-                # update the server:
-                self.livingdocs.update_server()
-                self.livingdocs.transform()
-                self.livingdocs.sql_transform("sqldatabase.db")
                 # fit a model:
                 self.model.fit(500, 20, 10, 4)
                 # model.load_model()
