@@ -133,7 +133,7 @@ class LivingDocs:
             # the last id number of a retrieved row in the file.
 
             n = int(next(reversed(list(csv.reader(f))))[0])
-            logging.info("Last id documented:{0}".format(n))
+            logging.info("Last event documented:{0}".format(n))
 
         with open(path, 'a') as file:
 
@@ -155,7 +155,7 @@ class LivingDocs:
 
         with open(path, 'r') as f:
 
-            logging.info("new last id documented: {0}".format(int(next(reversed(list(csv.reader(f))))[0])))
+            logging.info("new last event documented: {0}".format(int(next(reversed(list(csv.reader(f))))[0])))
 
         return n
 
@@ -210,6 +210,7 @@ class LivingDocs:
     def crop_query(df, log_id=0, unpublish=False):
 
         """ function reduces df to documentType = "article" and crops it at "id" """
+
         if not unpublish:
             return df.query('documentType == "article" & id > {0} & eventType != "unpublish"'.format(log_id))
         else:
@@ -229,7 +230,7 @@ class LivingDocs:
 
     def create_files_database(self):
 
-        """function creates data frame listing the files in source. """
+        """function creates data frame of listed downloaded files. """
 
         sorted_list = sorted(glob.glob(self.source + "*.csv"), key=lambda file: int(''.join(filter(str.isdigit, file))))
         d = []
@@ -769,6 +770,10 @@ class LivingDocs:
 
 
     def create_livingdocs_df(self,list_website):
+
+        """method to retrieve and create a database directly from the livingdocs database
+        :param: list_website, a list of docids of articles currently online.
+        :returns: database of last 10 days articles, replacing the one from webscrapper. """
 
         sql_query_last_10_days = """SELECT * FROM Livingdocs_articles WHERE publishdate BETWEEN datetime('now', '-10 days') AND datetime('now', '+1 days');"""
         conn = sqlite3.connect(self.sql_path, check_same_thread=False)

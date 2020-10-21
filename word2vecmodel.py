@@ -54,8 +54,8 @@ class W2V:
         return sorted(model_list, key=lambda d: int(
             time.mktime(time.strptime(d.split("_")[-1][:-6], "%Y-%m-%d-%H:%M:%S"))))[-1]
 
-    #@staticmethod
-    #def _get_header(cur):
+    # @staticmethod
+    # def _get_header(cur):
 
     #    """method extracts header from Livingdocs_articles."""
 
@@ -149,12 +149,11 @@ class W2V:
             sent_ite_train = iter(self.SentIterator(header, cur, sql_query_5))
             self.model.train(sent_ite_train, total_examples=l5, epochs=1)
 
-        # train over Digas' directory
+        # train over Digas. directory
         # print("training phase 2: ")
         # for path in glob.glob(self.directory + "*.txt"):
         #    sentences = pp.clean_text(path)
         #    self.model.train(sentences, total_examples=len(sentences), epochs=self.epochs)
-
 
         # sql digas
         # conn = sqlite3.connect(self.path_to_digas)
