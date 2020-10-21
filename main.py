@@ -106,6 +106,7 @@ def main():
     blz_scrapper = scrapper.WebScrapper(path_data_output)
     if args.blz:
         df = blz_scrapper.create_df(save=True)
+        df_test = li.create_livingdocs_df(df["DocId"].to_list())
     else:
         try:
             # load an existing web scrapping data frame.
@@ -113,13 +114,7 @@ def main():
         except FileNotFoundError:
             df = blz_scrapper.create_df(save=True)
 
-
-    ### merging df's - new section
-    #### Test: 10 last days df.
-
         df_test = li.create_livingdocs_df(df["DocId"].to_list())
-
-
 
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
