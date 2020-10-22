@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import ast
+import logging
 # import pandas as pd
 from operator import itemgetter
 
@@ -34,6 +35,8 @@ class Similarity:
         norm_v = np.sqrt(np.sum(v ** 2))
 
         # Compute the cosine similarity
+        if (norm_u * norm_v) == 0:
+            return -1
         return dot / (norm_u * norm_v)
 
     def w2v_map(self, string):
@@ -106,6 +109,8 @@ class Similarity:
         Argument: integers n,k.
                   a data frame df
         Returns : k integer indices similar to n."""
+
+        logging.info("Find similar articles for article: {0}".format(n))
 
         list_distances = []
         for i in range(self.df.shape[0]):

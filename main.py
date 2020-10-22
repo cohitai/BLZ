@@ -165,7 +165,7 @@ def main():
     if args.automate:
 
         automation = aut.AutoServer(server_url, li, model, sim, blz_scrapper)
-        automation.automate(t=3000, s=50)
+        automation.automate(t=60, s=50)
 
 
 if __name__ == "__main__":
