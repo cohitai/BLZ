@@ -18,11 +18,11 @@ class AutoServer:
         logging.info("Starting automation:")
         # "https://www.apiblzapp.tk/uploader"
         cnt = 1
-        # update the server:
-        self.livingdocs.update_server()
-        self.livingdocs.transform()
-        self.livingdocs.sql_transform("sqldatabase.db")
         while True:
+            # update the server:
+            self.livingdocs.update_server()
+            self.livingdocs.transform()
+            self.livingdocs.sql_transform("sqldatabase.db")
             if not cnt % s:
                 # fit a model:
                 self.model.fit(500, 20, 10, 4)
@@ -30,13 +30,16 @@ class AutoServer:
 
             # model load
             self.similarity.word_vectors = self.model.model.wv
-            # scrap the website
+
+            # scrap the website & create a database.
             df = self.blz_scrapper.create_df(save=True)
             self.similarity.df = self.livingdocs.create_livingdocs_df(df["DocId"].to_list())
             self.similarity.add_average_vector()
+
             # create a json file for prediction
             pickle.dump(self.similarity.predict(k=6), open(self.livingdocs.output_path + "/" + 'model.pkl', 'wb'))
             files = {'file': open(self.livingdocs.output_path + "/" + 'model.pkl', 'rb')}
+            # post
             r = requests.post(self.server_name+"/uploader", files=files)
             logging.info(r.text)
 
