@@ -48,7 +48,7 @@ def main():
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
     else:
-        server_url = "https://www.apiblzapp.ml"
+        server_url = "https://www.apiblzapp.tk"
 
     logging.info("Server name is set to: {0}".format(server_url))
 
