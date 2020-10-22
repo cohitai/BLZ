@@ -99,8 +99,6 @@ def main():
         li.transform()
         li.sql_transform("sqldatabase.db")
 
-
-
     # Web Scrapping "-B"
 
     blz_scrapper = scrapper.WebScrapper(path_data_output)
