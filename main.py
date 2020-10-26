@@ -48,7 +48,7 @@ def main():
         server_url = args.server_name[0]
         logging.info("server name:{0}".format(1))
     else:
-        server_url = "https://www.apiblzapp.tk"
+        server_url = "https://www.apiblzapp.ml"
 
     logging.info("Server name is set to: {0}".format(server_url))
 
@@ -165,7 +165,7 @@ def main():
     if args.automate:
 
         automation = aut.AutoServer(server_url, li, model, sim, blz_scrapper)
-        automation.automate(t=60, s=50)
+        automation.automate(t=1000, s=50)
 
 
 if __name__ == "__main__":
