@@ -758,13 +758,13 @@ class LivingDocs:
 
     # def create_livingdocs_df(self,list_website):
 
-    def create_livingdocs_df(self):
+    def create_livingdocs_df(self, days=30):
 
         """method to retrieve and create a database directly from the livingdocs database
         :param: list_website, a list of docids of articles currently online.
         :returns: database of last 10 days articles, replacing the one from webscrapper. """
 
-        sql_query_last_n_days = """SELECT * FROM Livingdocs_articles WHERE publishdate BETWEEN datetime('now', '-{0} days') AND datetime('now', '+1 days');""".format(30)
+        sql_query_last_n_days = """SELECT * FROM Livingdocs_articles WHERE publishdate BETWEEN datetime('now', '-{0} days') AND datetime('now', '+1 days');""".format(days)
         conn = sqlite3.connect(self.sql_path, check_same_thread=False)
         cur = conn.cursor()
         cur.execute(sql_query_last_n_days)

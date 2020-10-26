@@ -31,7 +31,7 @@ class AutoServer:
             self.similarity.word_vectors = self.model.model.wv
 
             # create a database.
-            self.similarity.df = self.livingdocs.create_livingdocs_df()
+            self.similarity.df = self.livingdocs.create_livingdocs_df(30)
             self.similarity.add_average_vector()
 
             # create a json file for prediction

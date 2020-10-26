@@ -94,27 +94,14 @@ def main():
     else:
         li.sql_path = li.output_path+"sqldatabase.db"
 
+    # LivingsdocsApi: creating database, but start from docid: "-LL"
+
     if args.livingdocs_1:
         li.update_server(args.livingdocs_1[0])
         li.transform()
         li.sql_transform("sqldatabase.db")
 
-    # Web Scrapping "-B"
-
-    #blz_scrapper = scrapper.WebScrapper(path_data_output)
-    #if args.blz:
-    #    df = blz_scrapper.create_df(save=True)
-    #    df_test = li.create_livingdocs_df(df["DocId"].to_list())
-    #else:
-    #    try:
-            # load an existing web scrapping data frame.
-    #        df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
-    #    except FileNotFoundError:
-    #        df = blz_scrapper.create_df(save=True)
-
-    #    df_test = li.create_livingdocs_df(df["DocId"].to_list())
-
-    df_test = li.create_livingdocs_df()
+    df_test = li.create_livingdocs_df(30)
 
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
