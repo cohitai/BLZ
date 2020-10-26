@@ -29,7 +29,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="Berliner- Zeitung recommendation engine")
     parser.add_argument("-A", "--automate", help="automate server by time", action="store_true")
-    parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
+    # parser.add_argument("-B", "--blz", help="scrap the website", action="store_true")
     parser.add_argument("-D", "--server_name", help="initiate domain name", nargs='+', type=str)
     parser.add_argument("-L", "--livingdocs", help="update server, create sql database", action="store_true")
     parser.add_argument("-LL", "--livingdocs_1", help="update server from a given event id",  nargs='+', type=int)
@@ -101,18 +101,20 @@ def main():
 
     # Web Scrapping "-B"
 
-    blz_scrapper = scrapper.WebScrapper(path_data_output)
-    if args.blz:
-        df = blz_scrapper.create_df(save=True)
-        df_test = li.create_livingdocs_df(df["DocId"].to_list())
-    else:
-        try:
+    #blz_scrapper = scrapper.WebScrapper(path_data_output)
+    #if args.blz:
+    #    df = blz_scrapper.create_df(save=True)
+    #    df_test = li.create_livingdocs_df(df["DocId"].to_list())
+    #else:
+    #    try:
             # load an existing web scrapping data frame.
-            df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
-        except FileNotFoundError:
-            df = blz_scrapper.create_df(save=True)
+    #        df = blz_scrapper.load_data_frame(path_data_output+"df.csv")
+    #    except FileNotFoundError:
+    #        df = blz_scrapper.create_df(save=True)
 
-        df_test = li.create_livingdocs_df(df["DocId"].to_list())
+    #    df_test = li.create_livingdocs_df(df["DocId"].to_list())
+
+    df_test = li.create_livingdocs_df()
 
     model = w2v.W2V(li.sql_path, models_directory=path_data_output_models)
 
@@ -123,8 +125,6 @@ def main():
         model.fit(args.fit[0], args.fit[1], args.fit[2], args.fit[3])
     else:
         model.load_model()
-    # print(model.model.wv.vocab.keys())
-    # print(model.model.wv.vectors.shape[0])
 
     # Similarity "-P"
     # instantiate similarity object from an existing model.
@@ -164,7 +164,7 @@ def main():
 
     if args.automate:
 
-        automation = aut.AutoServer(server_url, li, model, sim, blz_scrapper)
+        automation = aut.AutoServer(server_url, li, model, sim)
         automation.automate(t=1000, s=50)
 
 
