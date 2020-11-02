@@ -1,7 +1,6 @@
 import logging
 import sys
 logging.basicConfig(stream=sys.stdout, filemode='a', level=logging.INFO)
-import webscrapper as scrapper
 import LivingdocsApi as Liv
 import word2vecmodel as w2v
 import similarity_functions as aux
