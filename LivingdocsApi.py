@@ -492,8 +492,7 @@ class LivingDocs:
         except AttributeError:
             return text_list_2
 
-
-
+    # obsolete
 
     @staticmethod
     def json_to_text(obj):
