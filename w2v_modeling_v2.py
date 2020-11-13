@@ -3,12 +3,10 @@ import preprocessing as pp
 import nltk
 nltk.download("punkt")
 from gensim.models import Word2Vec
-import sys
 import time
 import os
 import glob
 import pymongo
-from pymongo import MongoClient
 
 
 class W2V:
