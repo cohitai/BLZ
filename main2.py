@@ -1,10 +1,12 @@
 import logging
 import sys
 logging.basicConfig(stream=sys.stdout, filemode='a', level=logging.INFO)
+
 import w2v_modeling_v2 as w2v
 import similarity_functions_v2 as aux
+import automation_v2 as aut
 import visualization as vis
-import automation as aut
+
 import argparse
 import pickle
 import os
@@ -46,20 +48,13 @@ def main():
 
     workspace_path = os.getcwd()
     path_data = workspace_path + "/data/"
-    path_data_1 = workspace_path + "/data/1/"
-    path_data_2 = workspace_path + "/data/2/"
     path_data_output = workspace_path + "/data/output/"
     path_data_output_models = workspace_path + "/data/output/models/"
 
     if args.set:
         os.mkdir(path_data)
-        os.mkdir(path_data_1)
-        os.mkdir(path_data_2)
         os.mkdir(path_data_output)
         os.mkdir(path_data_output_models)
-
-
-    # LivingsdocsApi: creating database, but start from docid: "-LL"
 
     model = w2v.W2V(models_directory=path_data_output_models)
 
@@ -78,12 +73,10 @@ def main():
     sim.add_average_vector()
 
     if args.predict:
-        logging.info(sim.predict(k=6))
+        logging.info("creating a prediction: ")
 
         # pickling
-        pickle.dump(sim.predict(k=6), open(li.output_path + "/" + 'model.pkl', 'wb'))
-
-        # model = pickle.load(open(li.output_path+"/"+'model.pkl', 'rb'))
+        pickle.dump(sim.predict(k=6), open(path_data_output + 'model.pkl', 'wb'))
 
     # Visualization "-V"
     if args.visualization:
@@ -109,8 +102,8 @@ def main():
     ############
 
     if args.automate:
-        automation = aut.AutoServer(server_url, li, model, sim)
-        automation.automate(t=1000, s=50)
+        automation = aut.AutoServer(server_url, model, sim, path_data_output)
+        automation.automate(t=10, s=50)
 
 
 if __name__ == "__main__":
