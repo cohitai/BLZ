@@ -50,11 +50,21 @@ def main():
     path_data = workspace_path + "/data/"
     path_data_output = workspace_path + "/data/output/"
     path_data_output_models = workspace_path + "/data/output/models/"
+    path_data_output_prediction = path_data_output + "prediction/"
 
     if args.set:
-        os.mkdir(path_data)
-        os.mkdir(path_data_output)
-        os.mkdir(path_data_output_models)
+
+        if not os.path.exists(path_data):
+            os.mkdir(path_data)
+
+        if not os.path.exists(path_data_output):
+            os.mkdir(path_data_output)
+
+        if not os.path.exists(path_data_output_models):
+            os.mkdir(path_data_output_models)
+
+        if not os.path.exists(path_data_output_prediction):
+            os.mkdir(path_data_output_prediction)
 
     model = w2v.W2V(models_directory=path_data_output_models)
 
@@ -76,7 +86,7 @@ def main():
         logging.info("creating a prediction: ")
 
         # pickling
-        pickle.dump(sim.predict(k=6), open(path_data_output + 'model.pkl', 'wb'))
+        pickle.dump(sim.predict(k=6), open(path_data_output_prediction + 'model.pkl', 'wb'))
 
     # Visualization "-V"
     if args.visualization:
@@ -102,8 +112,8 @@ def main():
     ############
 
     if args.automate:
-        automation = aut.AutoServer(server_url, model, sim, path_data_output)
-        automation.automate(t=10, s=50)
+        automation = aut.AutoServer(server_url, model, sim, path_data_output_prediction)
+        automation.automate(t=1200, s=50)
 
 
 if __name__ == "__main__":

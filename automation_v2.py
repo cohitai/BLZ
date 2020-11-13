@@ -7,8 +7,8 @@ import pickle
 class AutoServer:
 
     """server automation"""
-    def __init__(self, server_name, model, similarity, path_data_output):
-        self.path_data_output = path_data_output
+    def __init__(self, server_name, model, similarity, path_prediction):
+        self.path_prediction = path_prediction
         self.server_name = server_name
         self.model = model
         self.similarity = similarity
@@ -29,8 +29,8 @@ class AutoServer:
             self.similarity.add_average_vector()
 
             # create a json file for prediction
-            pickle.dump(self.similarity.predict(k=6), open(self.path_data_output + 'model.pkl', 'wb'))
-            files = {'file': open(self.path_data_output + 'model.pkl', 'rb')}
+            pickle.dump(self.similarity.predict(k=6), open(self.path_prediction + 'model.pkl', 'wb'))
+            files = {'file': open(self.path_prediction + 'model.pkl', 'rb')}
             # post
             r = requests.post(self.server_name+"/uploader", files=files)
             logging.info(r.text)
