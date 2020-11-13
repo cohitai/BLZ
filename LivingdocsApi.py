@@ -769,7 +769,7 @@ class LivingDocs:
         cur.execute(sql_query_last_n_days)
         data = cur.fetchall()
         df = pd.DataFrame(data,
-                          columns=['DocId', 'Section', 'Title','description', 'publishing_date', 'language', 'Text',
+                          columns=['DocId', 'Section', 'Title', 'description', 'publishing_date', 'language', 'Text',
                                    'Author', 'Url'])
 
 

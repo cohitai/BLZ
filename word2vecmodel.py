@@ -14,7 +14,6 @@ csv.field_size_limit(sys.maxsize)
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-
 class W2V:
 
     """creates and trains w2v model from an sql database"""
@@ -29,7 +28,6 @@ class W2V:
         self.model_path = None
         # self.directory = "/home/blz/Desktop/BLZ_Artikel_2/"
         self.path_to_digas = "/data/output/sql_digas"
-
         self.epochs = None
 
     def load_model(self):
