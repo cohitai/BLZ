@@ -5,15 +5,16 @@ logging.basicConfig(stream=sys.stdout, filemode='a', level=logging.INFO)
 import w2v_modeling_v2 as w2v
 import similarity_functions_v2 as aux
 import automation_v2 as aut
-import visualization as vis
 
+import visualization as vis
 import argparse
 import pickle
 import os
 
-""" Web- application for Berliner-Zeitung: 
+""" Web- application for Berliner-Zeitung:
+    V 2.0.  
 
-    consists of 6 objects/modules plus a main function to generates recommendations by similarity. 
+    consists of 5 objects/modules plus a main function to generates recommendations by similarity. 
 
     Units: 
         1. preprocessing.py (Module)
@@ -38,7 +39,6 @@ def main():
     # Workspace server_name
     if args.server_name:
         server_url = args.server_name[0]
-        logging.info("server name:{0}".format(1))
     else:
         server_url = "https://www.apiblzapp.ml"
 
