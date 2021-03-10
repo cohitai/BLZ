@@ -2,6 +2,6 @@
 Project
 
 
-Depracated version of BLZ- training-bot. The Pre- MongoDB era. 
+Depracated version (pre-MongoDB) of BLZ- training-bot. 
 
-1. DO NOT USE THIS VERSION. 
+-- DO NOT USE THIS VERSION -- 
